@@ -1,4 +1,6 @@
 # datacon24_vuln_wp
+https://www.datacon.org.cn/competition/competitions/91/introduction
+
 datacon比赛2024年漏洞分析赛道解题框架，包括针对赛题一和赛题二的可执行docker压缩包
 
 ## 赛题1  情报提取
