@@ -1,9 +1,9 @@
 # datacon24_vuln_wp
 https://www.datacon.org.cn/competition/competitions/91/introduction
 
-该项目datacon比赛2024年漏洞分析赛道冠军战队0817iotg的完整解题框架，内容包括针对赛题一和赛题二的可执行docker压缩包以及相关功能说明
+该项目基于datacon比赛2024年漏洞分析赛道冠军战队0817iotg的完整解题框架，集成了一个基于大模型的自动化漏洞分析系统，内容包括情报提取和漏洞分析两部分内容的可执行docker压缩包以及相关功能说明
 
-## 赛题1  情报提取
+## 一、情报提取
 
 ### 1.1问题描述  
 
@@ -28,7 +28,7 @@ https://www.datacon.org.cn/competition/competitions/91/introduction
 
 
 
-## 赛题2 漏洞挖掘
+## 二、漏洞挖掘
 
 ### 2.1问题描述  
 
